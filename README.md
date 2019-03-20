@@ -29,7 +29,7 @@ or
 ```sh
   yarn start 
 ```
-### Git config not add
+## Config git can't add
 ```sh
   git config core.autocrlf false
 ```
