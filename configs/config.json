@@ -1,0 +1,8 @@
+{
+    "TOKEN_EXPIRE_TIME": 7200,
+    "TOKEN_EXPIRE_TIME_REMEMBER": 144000,
+    "TOKEN_SECRET": "a4e13bCbb9",
+    "PASSWORD_RESET_URL": "http://localhost:8001/resetPassword",
+    "DEFAULT_PAGE_SIZE": 10
+  }
+  
