@@ -60,11 +60,6 @@
     "ignore": [
       "node_modules/**/node_modules"
     ],
-    "delay": "2500",
-    "env": {
-      "NODE_ENV": "development",
-      "PORT": 8001,
-      "DATABASE": "mongodb://localhost:27017/ccmStaging"
-    }
+    "delay": "2500"
   }
 }

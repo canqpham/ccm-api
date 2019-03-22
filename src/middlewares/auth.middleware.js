@@ -6,6 +6,7 @@ const authenticate = () => {
         // data after decode
         req.userId = user._id;
         next();
+        // return user._id;
       } else {
         return res.status(404).json({
           success: false,

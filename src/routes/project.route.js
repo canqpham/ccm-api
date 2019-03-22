@@ -3,11 +3,11 @@ const router = express.Router();
 
 import Authenticate from '../middlewares/auth.middleware';
 
-import BookController from '../controllers/book.controller';
+import ProjectController from '../controllers/project.controller';
 // Controller
-const bookController = new BookController();
+const projectController = new ProjectController();
 
-router.post('/', Authenticate(),  bookController.create);
+router.post('/', Authenticate(),  projectController.create);
 
 // router.post('/', userController.register);
 

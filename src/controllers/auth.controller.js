@@ -1,5 +1,6 @@
 import JWT from 'jsonwebtoken';
 import passport from 'passport';
+import { AuthConfig } from '../../configs/auth';
 import UserRepository from '../repositories/user.repository';
 
 const userRepository = new UserRepository();
@@ -16,7 +17,8 @@ class AuthController {
       let token = await this._signToken(user);
       return res.json({ token });
     } catch (error) {
-      return res.status(error.status).json({
+      console.log('error.status: ', error.status)
+      return res.status(error.status || 500).json({
         message: error.message
       });
     }
@@ -30,7 +32,7 @@ class AuthController {
         iat: new Date().getTime(),
         exp: new Date().setDate(new Date().getDate() + 1)
       },
-      secret.SECRET_KEY
+      AuthConfig.SECRET_KEY
     );
   }
 

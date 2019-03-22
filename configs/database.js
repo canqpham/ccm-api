@@ -1,5 +1,5 @@
 export const DatabaseConfig = {
-  URL: 'mongodb://bookingnow:bookingnowxxx@ds237808.mlab.com:37808/bookingnow-dev',
+  URL: 'mongodb://localhost:27017/ccmStaging',
   HOSTNAME: '',
   PORT: '',
   DATABASE: '',
