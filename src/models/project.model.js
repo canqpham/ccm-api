@@ -11,10 +11,14 @@ const ProjectSchema = new Schema(
     // lead: {type: ObjectId, ref: 'users', required},
     description: {type: String, default: null},
     members: [
-        {member: {type: ObjectId, ref: 'users'}}
+        {
+          member: {type: ObjectId, ref: 'users'},
+          group: {type: ObjectId, ref: 'groups'}
+        }
     ]
   },
   {
+    collection: 'projects',
     timestamps: true,
   },
 );

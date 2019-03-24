@@ -2,12 +2,17 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const { Schema } = mongoose;
+const { ObjectId } = mongoose.Types;
 
 const UserSchema = new Schema(
   {
     email: { type: String, lowercase: true, trim: true, index: true, sparse: true },
     password: String,
     isSupperAdmin: { type: Boolean, default: false },
+    fullName: {type: String, required: true},
+    jobTitle: {type: String},
+    shortName: {type: String},
+    projects: [{project: {type: ObjectId, ref: 'projects'}}]
   },
   {
     collection: 'users',
