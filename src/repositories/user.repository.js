@@ -14,12 +14,14 @@ class UserRepository {
     return user;
   }
 
-  handlerRegister = async (email, password) => {
+  handlerRegister = async (data) => {
+    const { email } = data
     let user = await User.findOne({ email });
     if(user) {
       return false;
     }
-    user = await User.create({ email, password });
+    console.log(data)
+    user = await User.create(data);
     return user;
   }
 }

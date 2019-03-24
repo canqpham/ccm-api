@@ -3,10 +3,10 @@ import UserRepository from '../repositories/user.repository';
 const userRepository = new UserRepository();
 class UserController {
     register = async (req, res, next) => {
-        let { email, password } = req.body;
+        let data = req.body;
         try {
             //handler login
-            let user = await userRepository.handlerRegister(email, password);
+            let user = await userRepository.handlerRegister(data);
             if (!user) throw new Error("Email is exist");
       
             //Initialize token
