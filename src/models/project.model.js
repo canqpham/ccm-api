@@ -8,14 +8,16 @@ const ProjectSchema = new Schema(
     name: {type: String, default: null},
     key: {type: String, default: null},
     lead: {type: ObjectId, ref: 'users', required: true},
-    // lead: {type: ObjectId, ref: 'users', required},
+    projectType: {type: ObjectId, ref: 'projectTypes'},
+    webUrl: {type: String},
     description: {type: String, default: null},
     members: [
         {
           member: {type: ObjectId, ref: 'users'},
           group: {type: ObjectId, ref: 'groups'}
         }
-    ]
+    ],
+    workflow: [{type: ObjectId, ref: 'workflow'}]
   },
   {
     collection: 'projects',

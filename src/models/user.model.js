@@ -1,39 +1,53 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const { Schema } = mongoose;
 const { ObjectId } = mongoose.Types;
 
 const UserSchema = new Schema(
   {
-    email: { type: String, lowercase: true, trim: true, index: true, sparse: true },
+    email: {
+      type: String,
+      lowercase: true,
+      trim: true,
+      index: true,
+      sparse: true,
+      required: true
+    },
+    active: { type: Boolean, default: true },
     password: String,
+    avatarUrl: { type: String },
     isSupperAdmin: { type: Boolean, default: false },
-    fullName: {type: String, required: true},
-    jobTitle: {type: String},
-    shortName: {type: String},
-    projects: [{project: {type: ObjectId, ref: 'projects'}}]
+    fullName: { type: String, required: true },
+    jobTitle: { type: String },
+    displayName: { type: String },
+    projects: [{ 
+      project: { type: ObjectId, ref: "projects" },
+      issues: [{type: ObjectId, ref: "issues"}]
+    }]
   },
   {
-    collection: 'users',
-    timestamps: true,
+    collection: "users",
+    timestamps: true
   }
 );
 
-UserSchema.pre('save', function (next) {
+UserSchema.pre("save", function(next) {
   // only hash the password if it has been modified (or is new)
-  if (!this.isModified('password')) { return next(); }
+  if (!this.isModified("password")) {
+    return next();
+  }
 
   // Hash password
-  const hash = bcrypt.hashSync(this.password, '$2b$04$2uXRjOrtjYMP3NY/ksrQJe');
+  const hash = bcrypt.hashSync(this.password, "$2b$04$2uXRjOrtjYMP3NY/ksrQJe");
   this.password = hash;
   next();
 });
 
-UserSchema.methods.comparePassword = function (password) {
+UserSchema.methods.comparePassword = function(password) {
   const account = this;
   return bcrypt.compareSync(password, account.password);
-}
+};
 
 const UserModel = mongoose.model("User", UserSchema);
 export default UserModel;
