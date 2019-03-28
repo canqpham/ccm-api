@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
-const { ObjectId } = mongoose.ypes;
+const { ObjectId } = Schema.Types;
 
 const ActivitySchema = new Schema(
   {
@@ -10,7 +10,7 @@ const ActivitySchema = new Schema(
     withIssue: {type: Boolean},
     content: {type: String, required: true},
     creator: {type: ObjectId, ref: 'users'},
-    issue: [{type: ObjectId, ref: 'issues'}],
+    issues: [{type: ObjectId, ref: 'issues'}],
     member: {type: ObjectId, ref: 'users'},
   },
   {

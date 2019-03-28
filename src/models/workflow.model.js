@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
-const { ObjectId } = mongoose.ypes;
+const { ObjectId } = Schema.Types;
 
 const WorkflowSchema = new Schema(
   {

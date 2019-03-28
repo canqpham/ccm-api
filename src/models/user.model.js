@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 const { Schema } = mongoose;
-const { ObjectId } = mongoose.Types;
+const { ObjectId } = Schema.Types;
 
 const UserSchema = new Schema(
   {
