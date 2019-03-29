@@ -17,7 +17,8 @@ const ProjectSchema = new Schema(
           group: {type: ObjectId, ref: 'groups'}
         }
     ],
-    workflow: [{type: ObjectId, ref: 'workflow'}]
+    workflow: [{type: ObjectId, ref: 'workflow'}],
+    groups: [{type: ObjectId, ref: 'groups'}]
   },
   {
     collection: 'projects',

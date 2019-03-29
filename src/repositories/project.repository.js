@@ -13,6 +13,10 @@ class ProjectRepository {
     return project;
   }
 
+  getListByUserId = async (userId) => {
+    const projects = await Project.findById({})
+  }
+
 //   handlerRegister = async (email, password) => {
 //     let user = await User.findOne({ email });
 //     if(user) {
