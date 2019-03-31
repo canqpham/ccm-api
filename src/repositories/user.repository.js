@@ -20,9 +20,13 @@ class UserRepository {
     if(user) {
       return false;
     }
-    console.log(data)
     user = await User.create(data);
     return user;
+  }
+
+  getUserInfo = async (_id) => {
+    let user = await User.findById(_id)
+    return user
   }
 }
 

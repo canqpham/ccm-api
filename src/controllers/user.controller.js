@@ -1,4 +1,5 @@
 import UserRepository from '../repositories/user.repository';
+import { RequestResponse } from '../utils/common';
 
 const userRepository = new UserRepository();
 class UserController {
@@ -18,6 +19,24 @@ class UserController {
               message: error.message
             });
           }
+    }
+
+    getInfo = async (req, res, next) => {
+      let _id = req.userId;
+      try {
+        let user = await userRepository.getUserInfo(_id)
+        if(!user) throw new Error("User not found !")
+        return res.json( new RequestResponse({
+          data: user,
+          statusCode: 200
+        }))
+      } catch (error) {
+        return res.json( new RequestResponse({
+          success: false,
+          statusCode: 400,
+          error
+        }))
+      }
     }
 }
 

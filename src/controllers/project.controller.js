@@ -24,6 +24,7 @@ class ProjectController {
       });
     }
   };
+  
   getListByUserId = async (req, res, next) => {
     let userId = req;
     try {
