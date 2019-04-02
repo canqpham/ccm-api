@@ -6,7 +6,8 @@ const { Schema } = mongoose;
 
 const PrioritySchema = new Schema(
   {
-    name: {type: String, required: true}, // story, bug, epic
+    name: {type: String, required: true}, // very high, high, medium, low
+    level: {type: Number, required: true}, // 0: very high, 1: high, 2: medium, 3: low 
     iconUrl: {type: String}
   },
   {

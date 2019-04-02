@@ -1,7 +1,7 @@
 import Issue from '../models/issue.model';
 import NotFoundException from '../errors/not-found.error';
 
-class BookRepository {
+class IssueRepository {
   constructor() { }
 
   create = async (data) => {
@@ -24,4 +24,4 @@ class BookRepository {
 //   }
 }
 
-export default BookRepository;
+export default IssueRepository;
