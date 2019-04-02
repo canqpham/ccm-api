@@ -8,12 +8,9 @@ class ProjectController {
     // console.log(req.userId)
     try {
       //handler login
-      let project = await projectRepository.create({
-        ...data,
-        lead: req.userId,
-      });
+      let project = await projectRepository.create(creator = req.userId, data);
       if (!project) throw new Error("Can't create project");
-
+      
       //Initialize token
       // let token = await this._signToken(user);
       return res.json({ project });
@@ -24,7 +21,7 @@ class ProjectController {
       });
     }
   };
-  
+
   getListByUserId = async (req, res, next) => {
     let userId = req;
     try {

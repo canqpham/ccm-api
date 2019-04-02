@@ -34,10 +34,9 @@ class GroupRepository {
         return groups;
     }
 
-    update = async (data) => {
-        const {_id} = data;
-        await Group.findByIdAndUpdate({_id}, data)
-        const group = await Group.findById({_id})
+    update = async (id, data) => {
+        await Group.findByIdAndUpdate(id, data)
+        const group = await Group.findById(id)
         return group
     }
 }

@@ -10,8 +10,7 @@ const ActivitySchema = new Schema(
     withIssue: {type: Boolean},
     content: {type: String, required: true},
     creator: {type: ObjectId, ref: 'users'},
-    issues: [{type: ObjectId, ref: 'issues'}],
-    member: {type: ObjectId, ref: 'users'},
+    issue: {type: ObjectId, ref: 'issues'},
   },
   {
     collection: 'activities',

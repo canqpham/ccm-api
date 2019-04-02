@@ -21,10 +21,6 @@ const UserSchema = new Schema(
     fullName: { type: String, required: true },
     jobTitle: { type: String },
     displayName: { type: String },
-    projects: [{ 
-      project: { type: ObjectId, ref: "projects" },
-      issues: [{type: ObjectId, ref: "issues"}]
-    }]
   },
   {
     collection: "users",

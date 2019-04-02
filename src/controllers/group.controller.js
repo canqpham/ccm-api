@@ -47,12 +47,13 @@ class GroupController {
 
     update = async (req, res, next) => {
         const data = req.body
+        const id = req.params.id
         try {
             let checkLevelExist = await groupRepository.checkLevelExist(data);
             let checkNameExist = await groupRepository.checkNameExist(data);
 
             if(checkLevelExist || checkNameExist) throw new Error('Group name or group level is exist !')
-            let group = await groupRepository.update(data);
+            let group = await groupRepository.update(id, data);
             if(!group) throw new Error("Can't update group")
             return res.json( new RequestResponse({
                 data: group,
@@ -66,6 +67,8 @@ class GroupController {
             }))
         }
     }
+
+    // getGroupByParams = async
 }
 
 export default GroupController;

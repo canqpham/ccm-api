@@ -11,12 +11,6 @@ const ProjectSchema = new Schema(
     projectType: {type: ObjectId, ref: 'projectTypes'},
     webUrl: {type: String},
     description: {type: String, default: null},
-    members: [
-        {
-          member: {type: ObjectId, ref: 'users'},
-          group: {type: ObjectId, ref: 'groups'}
-        }
-    ],
     workflow: [{type: ObjectId, ref: 'workflow'}],
     groups: [{type: ObjectId, ref: 'groups'}]
   },

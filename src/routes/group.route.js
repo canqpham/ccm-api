@@ -9,7 +9,7 @@ const groupController = new GroupController();
 
 router.post('/', Authenticate(),  groupController.create);
 router.get('/', Authenticate(),  groupController.getListAll);
-router.put('/', Authenticate(),  groupController.update);
+router.put('/:id', Authenticate(),  groupController.update);
 
 // router.post('/', userController.register);
 
