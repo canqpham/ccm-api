@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 
 const IssueTypeSchema = new Schema(
   {
-    type: {type: String, required: true}, // story, bug, epic
+    type: {type: String, required: true}, // story, bug, epic, subTask
     description: {type: String},
     iconUrl: {type: String}
   },
