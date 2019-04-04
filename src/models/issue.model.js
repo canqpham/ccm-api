@@ -24,6 +24,6 @@ const IssueSchema = new Schema(
   },
 );
 
-const IssueModel = mongoose.model("Issue", IssueSchema);
+const IssueModel = mongoose.model("issues", IssueSchema);
 
 export default IssueModel;

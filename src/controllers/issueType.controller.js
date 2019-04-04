@@ -1,7 +1,9 @@
 import IssueTypeRepository from '../repositories/issueType.repository'
+import UserRepository from '../repositories/user.repository'
 import {RequestResponse} from '../utils/common'
 
 const issueTypeRepository = new IssueTypeRepository()
+const userRepository = new UserRepository()
 
 class IssueTypeController {
     create = async (req, res, next) => {
@@ -9,8 +11,11 @@ class IssueTypeController {
         let userId = req.userId
         try {
             //handler data
+            let isExist = await issueTypeRepository.getIssueType({type: data.type})
+            if(isExist) throw new Error('Issue type is exist.')
+
             let issueType = await issueTypeRepository.create(data)
-            if (!issueType) throw new Error("Can't create type of issue")
+            if (!issueType) throw new Error("Can't create type of issue.")
             return res.json(new RequestResponse({
                 statusCode: 200,
                 data: issueType

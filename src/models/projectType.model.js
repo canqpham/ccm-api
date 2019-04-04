@@ -15,6 +15,6 @@ const ProjectTypeSchema = new Schema(
   },
 );
 
-const ProjectTypeModel = mongoose.model("ProjectType", ProjectTypeSchema);
+const ProjectTypeModel = mongoose.model("projectTypes", ProjectTypeSchema);
 
 export default ProjectTypeModel;

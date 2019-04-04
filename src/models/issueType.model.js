@@ -16,6 +16,6 @@ const IssueTypeSchema = new Schema(
   },
 );
 
-const IssueTypeModel = mongoose.model("IssueType", IssueTypeSchema);
+const IssueTypeModel = mongoose.model("issueTypes", IssueTypeSchema);
 
 export default IssueTypeModel;

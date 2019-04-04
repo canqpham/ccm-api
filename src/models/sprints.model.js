@@ -22,6 +22,6 @@ const SprintSchema = new Schema(
   },
 );
 
-const SprintModel = mongoose.model("Sprint", SprintSchema);
+const SprintModel = mongoose.model("sprints", SprintSchema);
 
 export default SprintModel;

@@ -1,7 +1,9 @@
 import IssueStatusRepository from '../repositories/issueStatus.repository'
+import UserRepository from '../repositories/user.repository'
 import {RequestResponse} from '../utils/common'
 
 const issueStatusRepository = new IssueStatusRepository()
+const userRepository = new UserRepository()
 
 class IssueStatusController {
     create = async (req, res, next) => {
@@ -9,8 +11,12 @@ class IssueStatusController {
         let userId = req.userId
         try {
             //handler data
+            let isExist = await issueStatusRepository.getIssueStatus({status: data.status})
+            if(isExist) throw new Error('Issue status is exist.')
+
             let issueStatus = await issueStatusRepository.create(data)
-            if (!issueStatus) throw new Error("Can't create status of issue")
+            if (!issueStatus) throw new Error("Can't create status of issue.")
+
             return res.json(new RequestResponse({
                 statusCode: 200,
                 data: issueStatus

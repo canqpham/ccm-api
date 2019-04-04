@@ -9,5 +9,5 @@ const BookSchema = new Schema(
   },
 );
 
-const BookModel = mongoose.model("Book", BookSchema);
+const BookModel = mongoose.model("books", BookSchema);
 export default BookModel;

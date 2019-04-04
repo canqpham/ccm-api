@@ -1,18 +1,31 @@
 import GroupRepository from '../repositories/group.repository'
+import UserRepository from '../repositories/user.repository'
 import { RequestResponse } from '../utils/common'
 
-const groupRepository = new GroupRepository
+const groupRepository = new GroupRepository()
+const userRepository = new UserRepository()
 
 class GroupController {
     create = async (req, res, next) => {
         let data = req.body
+        const userId = req.userId
         try {
-            let checkLevelExist = await groupRepository.checkLevelExist(data);
-            let checkNameExist = await groupRepository.checkNameExist(data);
+            // check data request
+            if(!data.name || !data.level) throw new Error('Missing level property or name property.')
 
-            if(checkLevelExist || checkNameExist) throw new Error('Group name or group level is exist !')
+            // check data is exist
+            let isLevelExist = await groupRepository.getGroup({level: data.level});
+            let isNameExist = await groupRepository.getGroup({name: data.name});
+            if(isLevelExist || isNameExist) throw new Error('Group name or group level is exist.')
 
-            let group = await groupRepository.create({...data, userId: req.userId});
+            // check role
+            let user = await userRepository.getUserInfo(userId)
+            if(!user.isSuperAdmin) throw new Error('Group must be created by superAdmin role.')
+
+            // create new group
+            let group = await groupRepository.create({...data, userId});
+
+            // error: can't create
             if (!group) throw new Error("Can't create group");
       
             return res.json( new RequestResponse({
@@ -49,10 +62,11 @@ class GroupController {
         const data = req.body
         const id = req.params.id
         try {
-            let checkLevelExist = await groupRepository.checkLevelExist(data);
-            let checkNameExist = await groupRepository.checkNameExist(data);
+           // check data is exist
+           let isLevelExist = await groupRepository.isExist({level: data.level});
+           let isNameExist = await groupRepository.isExist({name: data.name});
+           if(isLevelExist || isNameExist) throw new Error('Group name or group level is exist.')
 
-            if(checkLevelExist || checkNameExist) throw new Error('Group name or group level is exist !')
             let group = await groupRepository.update(id, data);
             if(!group) throw new Error("Can't update group")
             return res.json( new RequestResponse({

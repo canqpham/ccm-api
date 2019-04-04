@@ -1,15 +1,16 @@
 import IssueType from '../models/issueType.model';
-import NotFoundException from '../errors/not-found.error';
 
 class IssueTypeRepository {
   constructor() { }
 
   create = async (data) => {
-    const {type} = data;
-    const temp = await IssueType.findOne({type})
-    if(temp) return null;
     const issueType = await IssueType.create(data);
     return issueType;
+  }
+
+  getIssueType = async (data) => {
+    const issueType = await IssueType.findOne(data)
+    return issueType
   }
 
   update = async (id, data) => {

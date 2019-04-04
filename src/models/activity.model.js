@@ -18,6 +18,6 @@ const ActivitySchema = new Schema(
   },
 );
 
-const ActivityModel = mongoose.model("Activity", ActivitySchema);
+const ActivityModel = mongoose.model("activities", ActivitySchema);
 
 export default ActivityModel;

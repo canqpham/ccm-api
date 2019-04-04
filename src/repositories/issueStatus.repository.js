@@ -1,15 +1,16 @@
 import IssueStatus from '../models/issueStatus.model';
-import NotFoundException from '../errors/not-found.error';
 
 class IssueStatusRepository {
   constructor() { }
 
   create = async (data) => {
-    const {status} = data;
-    const temp = await IssueStatus.findOne({status})
-    if(temp) return null;
     const issueStatus = await IssueStatus.create(data);
     return issueStatus;
+  }
+
+  getIssueStatus = async (data) => {
+    const issueStatus = await IssueStatus.findOne(data)
+    return issueStatus
   }
 
   update = async (id, data) => {

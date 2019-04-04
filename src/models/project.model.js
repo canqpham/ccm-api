@@ -11,8 +11,6 @@ const ProjectSchema = new Schema(
     projectType: {type: ObjectId, ref: 'projectTypes'},
     webUrl: {type: String},
     description: {type: String, default: null},
-    workflow: [{type: ObjectId, ref: 'workflow'}],
-    groups: [{type: ObjectId, ref: 'groups'}]
   },
   {
     collection: 'projects',
@@ -20,6 +18,6 @@ const ProjectSchema = new Schema(
   },
 );
 
-const ProjectModel = mongoose.model("Project", ProjectSchema);
+const ProjectModel = mongoose.model("projects", ProjectSchema);
 
 export default ProjectModel;

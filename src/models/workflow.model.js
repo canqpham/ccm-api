@@ -20,6 +20,6 @@ const WorkflowSchema = new Schema(
   },
 );
 
-const WorkflowModel = mongoose.model("Workflow", WorkflowSchema);
+const WorkflowModel = mongoose.model("workflow", WorkflowSchema);
 
 export default WorkflowModel;

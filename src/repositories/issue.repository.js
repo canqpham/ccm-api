@@ -1,5 +1,4 @@
 import Issue from '../models/issue.model';
-import NotFoundException from '../errors/not-found.error';
 
 class IssueRepository {
   constructor() { }

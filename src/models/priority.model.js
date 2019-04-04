@@ -16,6 +16,6 @@ const PrioritySchema = new Schema(
   },
 );
 
-const PriorityModel = mongoose.model("Priority", PrioritySchema);
+const PriorityModel = mongoose.model("priorities", PrioritySchema);
 
 export default PriorityModel;

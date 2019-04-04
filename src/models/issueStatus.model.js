@@ -15,6 +15,6 @@ const IssueStatusSchema = new Schema(
   },
 );
 
-const IssueStatusModel = mongoose.model("IssueStatus", IssueStatusSchema);
+const IssueStatusModel = mongoose.model("issueStatus", IssueStatusSchema);
 
 export default IssueStatusModel;

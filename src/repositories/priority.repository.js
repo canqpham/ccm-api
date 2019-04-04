@@ -5,14 +5,15 @@ class PriorityRepository {
   constructor() { }
 
   create = async (data) => {
-    const {name, level} = data;
-    let temp = await Priority.findOne({name})
-    if(temp) return null;
-    temp = await Priority.findOne({level})
-    if(temp) return null;
     const priority = await Priority.create(data);
     return priority;
   }
+
+  getPriority = async (data) => {
+    const priority = await Priority.findOne(data)
+    return priority
+  }
+
 
   update = async (id, data) => {
       const priority = await Priority.findByIdAndUpdate(id, data)

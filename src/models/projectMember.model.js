@@ -7,7 +7,9 @@ const ProjectMemberSchema = new Schema(
   {
     member: {type: ObjectId, ref: 'users'},
     project: {type: ObjectId, ref: 'projects'},
-    group: {type: ObjectId, ref: 'groups'}
+    group: {type: ObjectId, ref: 'groups'},
+    isSuperAdmin: {type: Boolean, default: false},
+    isSupervise: {type: Boolean, default: false},
   },
   {
     collection: 'projectMembers',
@@ -15,6 +17,6 @@ const ProjectMemberSchema = new Schema(
   },
 );
 
-const ProjectMemberModel = mongoose.model("ProjectMember", ProjectMemberSchema);
+const ProjectMemberModel = mongoose.model("projectMembers", ProjectMemberSchema);
 
 export default ProjectMemberModel;
