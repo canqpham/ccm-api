@@ -13,6 +13,11 @@ class IssueRepository {
       return issue
   }
 
+  getIssueInfo = async (id) => {
+    const issue = await Issue.findById(id)
+    return issue
+  }
+
 //   handlerRegister = async (email, password) => {
 //     let user = await User.findOne({ email });
 //     if(user) {

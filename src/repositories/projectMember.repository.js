@@ -12,6 +12,11 @@ class ProjectMemberRepository {
         const result = await ProjectMember.find({member: id}).populate('project')
         return result
     }
+
+    getListUserByProjectId = async (id) => {
+        const result = await ProjectMember.find({project: id})
+        return result
+    }
 }
 
 export default ProjectMemberRepository

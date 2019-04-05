@@ -8,7 +8,7 @@ const IssueSchema = new Schema(
     project: {type: ObjectId, ref: 'projects'},
     assigneeAccount: {type: ObjectId, ref: 'users'},
     issueKey: {type: String},
-    creator: {type: String, required: true},
+    creator: {type: String, required: true}, // creator's name
     issueType: {type: ObjectId, ref: 'issueTypes'}, //story, subTack, epic
     summary: {type: String, required: true},
     description: {type: String},

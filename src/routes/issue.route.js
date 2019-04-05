@@ -1,14 +1,13 @@
-const express = require('express');
-const router = express.Router();
+const express = require('express')
+const router = express.Router()
 
-import Authenticate from '../middlewares/auth.middleware';
+import Authenticate from '../middlewares/auth.middleware'
 
-import IssueController from '../controllers/issue.controller';
+import IssueController from '../controllers/issue.controller'
 // Controller
-const issueController = new IssueController();
+const issueController = new IssueController()
 
-router.post('/', Authenticate(),  issueController.create);
+router.post('/', Authenticate(),  issueController.create)
+router.get('/:id', Authenticate(), issueController.getIssueInfo)
 
-// router.post('/', userController.register);
-
-module.exports = router;
+module.exports = router
