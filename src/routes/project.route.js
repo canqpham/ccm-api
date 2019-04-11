@@ -8,7 +8,8 @@ import ProjectController from '../controllers/project.controller';
 const projectController = new ProjectController();
 
 router.post('/', Authenticate(),  projectController.create);
-router.get('/', Authenticate(), projectController.getListAll)
-// router.post('/', userController.register);
+router.get('/', Authenticate(), projectController.getListAllProjectByUserId)
+router.get('/:id', Authenticate(), projectController.getProjectInfo)
+router.put('/:id', Authenticate(), projectController.update);
 
 module.exports = router;

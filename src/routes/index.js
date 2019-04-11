@@ -1,6 +1,5 @@
 const express = require('express')
 const router = express.Router()
-
 // Route Modules
 import AuthRoute from './auth.route'
 import BookRoute from './book.route'
@@ -12,6 +11,7 @@ import IssueTypeRoute from './issueType.route'
 import IssueStatusRoute from './issueStatus.route'
 import PriorityRoute from './priority.route'
 import AssignIssueRoute from './assignIssue.route'
+import ProjectTypeRoute from './projectType.route'
 
 // Handler route
 router.use('/auth', AuthRoute)
@@ -24,5 +24,7 @@ router.use('/issueType', IssueTypeRoute)
 router.use('/issueStatus', IssueStatusRoute)
 router.use('/priority', PriorityRoute)
 router.use('/assignIssue', AssignIssueRoute)
+router.use('/projectType', ProjectTypeRoute)
+
 
 module.exports = router

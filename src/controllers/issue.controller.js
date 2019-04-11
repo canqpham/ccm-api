@@ -42,16 +42,23 @@ class IssueController {
     getIssueInfo = async (req, res, next) => {
         const id = req.params.id
         let userId = req.userId
+        console.log(req.io)
+        req.io.on('get_issue', () => {
+          console.log('issue get info')
+        })
         try {
           let issue = await issueRepository.getIssueInfo(id)
           if(!issue) throw new Error('Issue is not found')
           let assignIssue = await assignIssueRepository.getListAssignByIssue(id)
-          const assignees = await assignIssue.map(item => _.omit(item.assignee, ['password']))
-          const result = await _.assign({...issue._doc}, {assignees})
-          
+          let assignees = await assignIssue.map(item => _.omit(item.assignee, ['password']))
+          // const result = await _.assign({...issue._doc}, {assignees})
+          // issue = {
+          //   ...issue.toObject(),
+          //   assignees
+          // }
           return res.json(new RequestResponse({
             statusCode: 200,
-            data: result
+            data: issue
           }))
         } catch (error) {
           return res.json(new RequestResponse({

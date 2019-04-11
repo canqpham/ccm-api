@@ -1,5 +1,5 @@
 import Issue from '../models/issue.model';
-
+import mongoose from "mongoose";
 class IssueRepository {
   constructor() { }
 
@@ -14,7 +14,36 @@ class IssueRepository {
   }
 
   getIssueInfo = async (id) => {
-    const issue = await Issue.findById(id)
+    const issue = await Issue.aggregate([
+      {
+        $match: {
+        "_id": mongoose.Types.ObjectId(id)
+        }
+      },
+      {
+        $lookup: {
+          from: 'assignIssues',
+          localField: '_id',
+          foreignField: 'issue',
+          pipeline: [
+            {
+              $match: {
+                "active": true,
+              },
+            },
+            {
+              $lookup: {
+                from: 'users',
+                localField: 'assignee',
+                foreignField: '_id',
+                as: 'user'
+              }
+            }
+          ],
+          as: "assignees",
+        },
+      },
+    ])
     return issue
   }
 

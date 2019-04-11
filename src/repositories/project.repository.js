@@ -9,7 +9,13 @@ class ProjectRepository {
   }
 
   update = async (id, data) => {
-    const project = await Project.findByIdAndUpdate(id, data)
+    await Project.findByIdAndUpdate(id, data)
+    const project = await Project.findById(id)
+    return project
+  }
+
+  getProject = async (id) => {
+    const project = await Project.findById(id)
     return project
   }
 }
