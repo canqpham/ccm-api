@@ -63,8 +63,8 @@ class GroupController {
         const id = req.params.id
         try {
            // check data is exist
-           let isLevelExist = await groupRepository.isExist({level: data.level});
-           let isNameExist = await groupRepository.isExist({name: data.name});
+           let isLevelExist = await groupRepository.getGroup({level: data.level});
+           let isNameExist = await groupRepository.getGroup({name: data.name});
            if(isLevelExist || isNameExist) throw new Error('Group name or group level is exist.')
 
             let group = await groupRepository.update(id, data);

@@ -12,7 +12,6 @@ class IssueController {
     create = async (req, res, next) => {
         let data = req.body
         let userId = req.userId
-
         try {
             //handler login
             const user = await userRepository.getUserInfo(userId)
@@ -37,6 +36,25 @@ class IssueController {
               error
             }))
           }
+    }
+
+    getAllInProject = async (req, res, next) => {
+      const id = req.params.id
+      const userId = req.userId
+      try {
+        let issues = await issueRepository.getAllIssueByProjectId(id)
+        if(!issues) throw new Error("Can't get all issue")
+        return res.json(new RequestResponse({
+          statusCode: 200,
+          data: issues
+        }))
+      } catch (error) {
+        return res.json(new RequestResponse({
+          statusCode: 400,
+          succes: false,
+          error
+        }))
+      }
     }
 
     getIssueInfo = async (req, res, next) => {
@@ -67,6 +85,45 @@ class IssueController {
             error
           }))
         }
+    }
+
+    update = async (req, res, next) => {
+      const data = req.body
+      const id = req.params.id
+      const userId = req.userId
+      try {
+        let issue = await issueRepository.update(id, data)
+        console.log(issue)
+        if(!issue) throw new Error("Can't update issue")
+        return res.json(new RequestResponse({
+          statusCode: 200,
+          data: issue
+        }))
+      } catch (error) {
+        return res.json(new RequestResponse({
+          statusCode: 400,
+          success: false,
+          error
+        }))
+      }
+    }
+
+    remove = async (req, res, next) => {
+      const id = req.id
+      try {
+        let issue = issueRepository.remove(id)
+        if(!issue) throw new Error("Can't remove issue")
+        return res.json(new RequestResponse({
+          statusCode: 200,
+          data: issue
+        }))
+      } catch (error) {
+        return res.json(new RequestResponse({
+          statusCode: 400,
+          succes: false,
+          error
+        }))
+      }
     }
 }
 

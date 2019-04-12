@@ -9,8 +9,17 @@ class IssueRepository {
   }
 
   update = async (id, data) => {
-      const issue = await Issue.findByIdAndUpdate(id, data)
+    // console.log(id)
+      await Issue.findOneAndUpdate({_id: id}, data)
+
+      const issue = Issue.findOne({_id: id})
+      // console.log(Object(issue))
       return issue
+  }
+
+  getAllIssueByProjectId = async (id) => {
+    const issues = await Issue.find({project: id})
+    return issues
   }
 
   getIssueInfo = async (id) => {
@@ -25,21 +34,6 @@ class IssueRepository {
           from: 'assignIssues',
           localField: '_id',
           foreignField: 'issue',
-          pipeline: [
-            {
-              $match: {
-                "active": true,
-              },
-            },
-            {
-              $lookup: {
-                from: 'users',
-                localField: 'assignee',
-                foreignField: '_id',
-                as: 'user'
-              }
-            }
-          ],
           as: "assignees",
         },
       },
@@ -47,14 +41,10 @@ class IssueRepository {
     return issue
   }
 
-//   handlerRegister = async (email, password) => {
-//     let user = await User.findOne({ email });
-//     if(user) {
-//       return false;
-//     }
-//     user = await User.create({ email, password });
-//     return user;
-//   }
+  remove = async id => {
+    const issue = await Issue.findByIdAndRemove(id)
+    return issue
+  }
 }
 
 export default IssueRepository;
