@@ -14,13 +14,19 @@ class ProjectTypeRepository {
   }
 
   update = async (id, data) => {
-      const projectType = await ProjectType.findByIdAndUpdate(id, data)
+      await ProjectType.findByIdAndUpdate(id, data)
+      const projectType = await ProjectType.findById(id)
       return projectType
   }
 
   getListAll = async () => {
       const projectTypes = await ProjectType.find()
       return projectTypes
+  }
+
+  remove = async id => {
+    const projectType = await ProjectType.findByIdAndRemove(id)
+    return projectType
   }
 }
 

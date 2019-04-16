@@ -1,19 +1,19 @@
-const express = require('express');
-const router = express.Router();
+const express = require('express')
+const router = express.Router()
 
 // Authenticate function
-import Authenticate from '../middlewares/auth.middleware';
+import Authenticate from '../middlewares/auth.middleware'
 
 // Controllers function
-import IssueStatusController from '../controllers/issueStatus.controller';
+import IssueStatusController from '../controllers/issueStatus.controller'
 
 // Create new Controller contructor
-const issueStatusController = new IssueStatusController();
+const issueStatusController = new IssueStatusController()
 
 // Route and method: GET POST PUT DELETE
-router.get('/', Authenticate(),  issueStatusController.getListAll);
-router.post('/', Authenticate(),  issueStatusController.create);
+router.get('/', Authenticate(),  issueStatusController.getListAll)
+router.post('/', Authenticate(),  issueStatusController.create)
+router.put('/:id', Authenticate(), issueStatusController.update)
+router.delete('/:id', Authenticate(), issueStatusController.remove)
 
-// router.post('/', userController.register);
-
-module.exports = router;
+module.exports = router

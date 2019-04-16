@@ -14,13 +14,19 @@ class IssueStatusRepository {
   }
 
   update = async (id, data) => {
-      const issueStatus = await IssueStatus.findByIdAndUpdate(id, data)
+      await IssueStatus.findByIdAndUpdate(id, data)
+      const issueStatus = await IssueStatus.findById(id)
       return issueStatus
   }
 
   getListAll = async () => {
       const issueStatuses = await IssueStatus.find()
       return issueStatuses
+  }
+
+  remove = async (id) => {
+    const issueStatus = await IssueStatus.findByIdAndRemove(id)
+    return issueStatus
   }
 }
 

@@ -46,6 +46,47 @@ class IssueStatusController {
             }))
         }
     }
+
+    update = async (req, res, next) => {
+        let data = req.body
+        let userId = req.userId
+        let id = req.params.id
+        try {
+            let issueStatus = await issueStatusRepository.update(id, data)
+            if(!issueStatus) throw new Error("Can't update issue status")
+
+            return res.json(new RequestResponse({
+                statusCode: 200,
+                data: issueStatus
+            }))
+        } catch (error) {
+            return res.json(new RequestResponse({
+                statusCode: 400,
+                success: false,
+                error
+            }))
+        }
+    }
+
+    remove = async (req, res, next) => {
+        let id = req.params.id
+        let userId = req.userId
+        try {
+            let issueStatus = await issueStatusRepository.remove(id)
+            if(!issueStatus) throw new Error("Can't remove issue status")
+
+            return res.json(new RequestResponse({
+                data: issueStatus,
+                statusCode: 200
+            }))
+        } catch (error) {
+            return res.json(new RequestResponse({
+                statusCode: 400,
+                success: false,
+                error
+            }))
+        }
+    }
 }
 
 export default IssueStatusController

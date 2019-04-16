@@ -50,6 +50,47 @@ class PriorityController {
             }))
         }
     }
+
+    update = async (req, res, next) => {
+        let data = req.body
+        let userId = req.userId
+        let id = req.params.id
+        try {
+            let priority = await priorityRepository.update(id, data)
+            if(!priority) throw new Error("Can't update priority")
+
+            return res.json(new RequestResponse({
+                statusCode: 200,
+                data: priority
+            }))
+        } catch (error) {
+            return res.json(new RequestResponse({
+                statusCode: 400,
+                success: false,
+                error
+            }))
+        }
+    }
+
+    remove = async (req, res, next) => {
+        let id = req.params.id
+        let userId = req.userId
+        try {
+            let priority = await priorityRepository.remove(id)
+            if(!priority) throw new Error("Can't remove priority")
+
+            return res.json(new RequestResponse({
+                data: priority,
+                statusCode: 200
+            }))
+        } catch (error) {
+            return res.json(new RequestResponse({
+                statusCode: 400,
+                success: false,
+                error
+            }))
+        }
+    }
 }
 
 export default PriorityController

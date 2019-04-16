@@ -16,13 +16,19 @@ class PriorityRepository {
 
 
   update = async (id, data) => {
-      const priority = await Priority.findByIdAndUpdate(id, data)
+      await Priority.findByIdAndUpdate(id, data)
+      const priority = await Priority.findById(id)
       return priority
   }
 
   getListAll = async () => {
       const priorities = await Priority.find()
       return priorities
+  }
+
+  remove = async (id) => {
+    const priority = await Priority.findByIdAndRemove(id)
+    return priority
   }
 }
 

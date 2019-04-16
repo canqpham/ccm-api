@@ -41,6 +41,47 @@ class ProjectTypeController {
       }))
     }
   }
+
+  update = async (req, res, next) => {
+        let data = req.body
+        let userId = req.userId
+        let id = req.params.id
+        try {
+            let projectType = await projectTypeRepository.update(id, data)
+            if(!projectType) throw new Error("Can't update project type")
+
+            return res.json(new RequestResponse({
+                statusCode: 200,
+                data: projectType
+            }))
+        } catch (error) {
+            return res.json(new RequestResponse({
+                statusCode: 400,
+                success: false,
+                error
+            }))
+        }
+    }
+
+    remove = async (req, res, next) => {
+        let id = req.params.id
+        let userId = req.userId
+        try {
+            let projectType = await projectTypeRepository.remove(id)
+            if(!projectType) throw new Error("Can't remove project type")
+
+            return res.json(new RequestResponse({
+                data: projectType,
+                statusCode: 200
+            }))
+        } catch (error) {
+            return res.json(new RequestResponse({
+                statusCode: 400,
+                success: false,
+                error
+            }))
+        }
+    }
 }
 
 export default ProjectTypeController

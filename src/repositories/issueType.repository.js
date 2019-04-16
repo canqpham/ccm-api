@@ -14,13 +14,19 @@ class IssueTypeRepository {
   }
 
   update = async (id, data) => {
-      const issueType = await IssueType.findByIdAndUpdate(id, data)
+      await IssueType.findByIdAndUpdate(id, data)
+      const issueType = await IssueType.findById(id)
       return issueType
   }
 
   getListAll = async () => {
       const issueTypes = await IssueType.find()
       return issueTypes
+  }
+
+  remove = async (id) => {
+    const issueType = await IssueType.findByIdAndRemove(id)
+    return issueType
   }
 }
 
