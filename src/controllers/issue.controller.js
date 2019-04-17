@@ -126,6 +126,26 @@ class IssueController {
         }))
       }
     }
+
+    updateLabel = async (req, res, next) => {
+      const {label} = req.body
+      const issueId = req.body.issue
+      const userId = req.userId
+      try {
+        let issue = await issueRepository.update(issueId, {label})
+        if(!issue) throw new Error("Can't update the label for this issue")
+        return res.json(new RequestResponse({
+          statusCode: 200,
+          data: issue
+        }))
+      } catch (error) {
+        return res.json(new RequestResponse({
+          statusCode: 400,
+          succes: false,
+          error
+        }))
+      }
+    }
 }
 
 export default IssueController

@@ -14,9 +14,14 @@ const IssueSchema = new Schema(
     description: {type: String},
     priority: {type: ObjectId, ref: 'priorities'},
     issueStatus: {type: ObjectId, ref: 'issueStatus'}, // to do, in progress, test, done
-    sprints: {type: ObjectId, ref: 'sprints'},
+    sprint: {type: ObjectId, ref: 'sprints'},
     attach: {type: ObjectId, ref: 'attachs'},
-    subTaskOfIssue: {type: ObjectId, ref: 'issues'} // a subTask belong only issue
+    subTaskOfIssue: {type: ObjectId, ref: 'issues'}, // a subTask belong only issue
+    label: {type: ObjectId, ref: 'labels'},
+    resloved: {type: Date},
+    estimateTime: {type: String},
+    actualTime: {type: String},
+    vote: {type: Number}
   },
   {
     collection: 'issues',

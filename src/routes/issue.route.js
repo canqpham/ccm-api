@@ -12,5 +12,5 @@ router.get('/all/:id', Authenticate(), issueController.getAllInProject)
 router.get('/:id', Authenticate(), issueController.getIssueInfo)
 router.put('/:id', Authenticate(), issueController.update)
 router.delete('/:id', Authenticate(), issueController.remove)
-
+router.post('/updateLabel', Authenticate(), issueController.updateLabel)
 module.exports = router

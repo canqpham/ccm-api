@@ -151,7 +151,9 @@ class SprintController {
   };
 
   startSprint = async (req, res, next) => {
-    const data, {project, sprint} = req.body
+    const {project} = req.body
+    const data = req.body
+    const sprintId = req.body.sprint
     const userId = req.userId
     try {
       const sprints = await sprintRepository.getListSprintByParams({project})
@@ -162,7 +164,32 @@ class SprintController {
       //   ...req.body,
       // }
 
-      const sprint = await sprintRepository.update(sprint, data)
+      const sprint = await sprintRepository.update(sprintId, data)
+      if(!sprint) throw new Error("Can't start sprint")
+
+      return res.json(new RequestResponse({
+        statusCode: 200,
+        data: sprint
+      }))
+    } catch (error) {
+      return res.json(new RequestResponse({
+        statusCode: 400,
+        success: false,
+        error
+      }))
+    }
+  }
+
+  completeSprint = async (req, res, next) => {
+    const {project} = req.body
+    const data = req.body
+    const sprintId = req.body.sprint
+    const userId = req.userId
+    try {
+      const sprints = await sprintRepository.getListSprintByParams({project})
+      if(!sprints) throw new Error('Not found sprints of this project')
+
+      const sprint = await sprintRepository.update(sprintId, data)
       if(!sprint) throw new Error("Can't start sprint")
 
       return res.json(new RequestResponse({
