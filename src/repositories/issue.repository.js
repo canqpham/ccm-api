@@ -37,6 +37,14 @@ class IssueRepository {
           as: "assignees",
         },
       },
+      {
+        $lookup: {
+          from: 'issues',
+          localField: '_id',
+          foreignField: 'subTaskOfIssue',
+          as: "subtaks",
+        }
+      }
     ])
     return issue
   }

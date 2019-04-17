@@ -39,6 +39,7 @@ class IssueController {
     }
 
     getAllInProject = async (req, res, next) => {
+      // console.log(req)
       const id = req.params.id
       const userId = req.userId
       try {
@@ -60,7 +61,7 @@ class IssueController {
     getIssueInfo = async (req, res, next) => {
         const id = req.params.id
         let userId = req.userId
-        console.log(req.io)
+        // console.log(req)
         req.io.on('get_issue', () => {
           console.log('issue get info')
         })
