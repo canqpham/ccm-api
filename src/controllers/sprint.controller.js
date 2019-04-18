@@ -1,9 +1,11 @@
 import SprintRepository from "../repositories/sprint.repository";
+import IssueRepository from '../repositories/issue.repository'
 import moment from 'moment';
 
 import { RequestResponse } from "../utils/common";
 
 const sprintRepository = new SprintRepository();
+const issueRepository = new IssueRepository();
 
 class SprintController {
   constructor() {}
@@ -126,11 +128,11 @@ class SprintController {
     }
   };
 
-  getListSprintByParams = async (req, res, next) => {
-    let { completed } = req.params;
+  getListSprintNotComplete = async (req, res, next) => {
+    let { completed, project } = req.params;
     let userId = req.userId;
     try {
-      let sprints = await sprintRepository.getListSprintByParams({ completed });
+      let sprints = await sprintRepository.getListSprintByParams({ completed, project });
       if (!sprints) throw new Error("Can't get list sprints");
 
       return res.json(
@@ -149,6 +151,27 @@ class SprintController {
       );
     }
   };
+
+  addIssueToSprint = async (req, res, next) => {
+    const {issue, sprint} = req.body
+    try {
+      const is = await issueRepository.update(issue, {sprint})
+      console.log(is)
+      const result = await sprintRepository.getSprintById(sprint)
+      if(!result) throw new Error("Cannot add issue to this sprint")
+
+      return res.json(new RequestResponse({
+        statusCode: 200,
+        data: result
+      }))
+    } catch (error) {
+      return res.json(new RequestResponse({
+        statusCode: 400,
+        succes: false,
+        error
+      }))
+    }
+  }
 
   startSprint = async (req, res, next) => {
     const {project} = req.body

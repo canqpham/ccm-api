@@ -15,12 +15,46 @@ class SprintRepository {
     return sprint
   }
 
-  getSprint = async (data) => {
-    const sprint = await Sprint.findOne(data)
+  getSprintById = async (id) => {
+    const sprint = await Sprint.aggregate([
+      {
+        $match: {
+        "_id": mongoose.Types.ObjectId(id)
+        },
+      },
+      {
+        $lookup: {
+          from: 'issues',
+          localField: '_id',
+          foreignField: 'sprint',
+          as: "issues",
+        },
+        // $group: {
+        //   _id: "issueStatus",
+        //   count: { $sum: 1 }
+        // },
+        
+      },
+      {
+        $addFields: {
+          //  item: 1,
+           numberOfTodo: { $cond: { if: { $isArray: "$issues" }, then: { $size: "$issues" }, else: "NA"} }
+        }
+      }
+      // {
+      //   $lookup: {
+      //     from: 'issues',
+      //     localField: '_id',
+      //     foreignField: 'sprint',
+
+      //     as: "numberOfIssueStatus",
+      //   }
+      // }
+    ])
     return sprint
   }
 
-  getListAllSprint = async () => {
+  getListAll = async () => {
     const sprints = await Sprint.find()
     return sprints
   }

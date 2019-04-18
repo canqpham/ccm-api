@@ -32,11 +32,19 @@ class IssueRepository {
       {
         $lookup: {
           from: 'assignIssues',
-          localField: '_id',
-          foreignField: 'issue',
+          pipeline: [
+            { $match: { issue: mongoose.Types.ObjectId(id) } },
+            { $project: { member: "$assignee" } },
+          ],
           as: "assignees",
         },
       },
+      {
+        $addFields: {
+          //  item: 1,
+           numberOfAssignee: { $cond: { if: { $isArray: "$assignees" }, then: { $size: "$assignees" }, else: "NA"} }
+        }
+     },
       {
         $lookup: {
           from: 'issues',

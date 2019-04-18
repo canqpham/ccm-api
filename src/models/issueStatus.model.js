@@ -5,7 +5,7 @@ const { Schema } = mongoose;
 
 const IssueStatusSchema = new Schema(
   {
-    status: {type: String, required: true}, // to do, in progress, done
+    status: {type: String, required: true, emun: ['to do', 'in progress', 'done']}, // to do, in progress, done
     description: {type: String},
     iconUrl: {type: String}
   },
