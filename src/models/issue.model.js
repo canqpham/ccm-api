@@ -15,6 +15,7 @@ const IssueSchema = new Schema(
     priority: {type: ObjectId, ref: 'priorities'},
     issueStatus: {type: ObjectId, ref: 'issueStatus'}, // to do, in progress, test, done
     sprint: {type: ObjectId, ref: 'sprints'},
+    workflow: {type: ObjectId, ref: 'workflow'},
     attach: {type: ObjectId, ref: 'attachs'},
     subTaskOfIssue: {type: ObjectId, ref: 'issues'}, // a subTask belong only issue
     label: {type: ObjectId, ref: 'labels'},

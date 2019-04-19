@@ -11,7 +11,7 @@ class SprintRepository {
 
   update = async (id, data) => {
     await Sprint.findByIdAndUpdate(id, data)
-    const sprint = await Sprint.findById(id)
+    const sprint = await this.getSprintById(id)
     return sprint
   }
 
@@ -28,6 +28,19 @@ class SprintRepository {
           localField: '_id',
           foreignField: 'sprint',
           as: "issues",
+        },
+        // $group: {
+        //   _id: "issueStatus",
+        //   count: { $sum: 1 }
+        // },
+        
+      },
+      {
+        $lookup: {
+          from: 'workflow',
+          localField: '_id',
+          foreignField: 'sprint',
+          as: "boards",
         },
         // $group: {
         //   _id: "issueStatus",

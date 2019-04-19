@@ -21,6 +21,7 @@ router.get('/', Authenticate(),  sprintController.getListAll);
 router.put('/', Authenticate(),  sprintController.update);
 router.post('/start', Authenticate(), sprintController.startSprint)
 router.post('/complete', Authenticate(), sprintController.completeSprint)
+router.get('/active', Authenticate(), sprintController.getSprint)
 
 
 module.exports = router;

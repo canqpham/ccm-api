@@ -1,10 +1,12 @@
 import SprintRepository from "../repositories/sprint.repository";
-import IssueRepository from '../repositories/issue.repository'
-import moment from 'moment';
+import IssueRepository from "../repositories/issue.repository";
+import WorkflowRepository from "../repositories/workflow.repository";
+import moment from "moment";
 
 import { RequestResponse } from "../utils/common";
 
 const sprintRepository = new SprintRepository();
+const workflowRepository = new WorkflowRepository();
 const issueRepository = new IssueRepository();
 
 class SprintController {
@@ -132,7 +134,10 @@ class SprintController {
     let { completed, project } = req.params;
     let userId = req.userId;
     try {
-      let sprints = await sprintRepository.getListSprintByParams({ completed, project });
+      let sprints = await sprintRepository.getListSprintByParams({
+        completed,
+        project
+      });
       if (!sprints) throw new Error("Can't get list sprints");
 
       return res.json(
@@ -153,80 +158,126 @@ class SprintController {
   };
 
   addIssueToSprint = async (req, res, next) => {
-    const {issue, sprint} = req.body
+    const { issue, sprint } = req.body;
     try {
-      const is = await issueRepository.update(issue, {sprint})
-      console.log(is)
-      const result = await sprintRepository.getSprintById(sprint)
-      if(!result) throw new Error("Cannot add issue to this sprint")
+      const is = await issueRepository.update(issue, { sprint });
+      console.log(is);
+      const result = await sprintRepository.getSprintById(sprint);
+      if (!result) throw new Error("Cannot add issue to this sprint");
 
-      return res.json(new RequestResponse({
-        statusCode: 200,
-        data: result
-      }))
+      return res.json(
+        new RequestResponse({
+          statusCode: 200,
+          data: result
+        })
+      );
     } catch (error) {
-      return res.json(new RequestResponse({
-        statusCode: 400,
-        succes: false,
-        error
-      }))
+      return res.json(
+        new RequestResponse({
+          statusCode: 400,
+          succes: false,
+          error
+        })
+      );
     }
-  }
+  };
 
   startSprint = async (req, res, next) => {
-    const {project} = req.body
-    const data = req.body
-    const sprintId = req.body.sprint
-    const userId = req.userId
+    const { project, active } = req.body;
+    // const data = req.body
+    const sprintId = req.body.sprint;
+    const userId = req.userId;
     try {
-      const sprints = await sprintRepository.getListSprintByParams({project})
-      if(!sprints) throw new Error('Not found sprints of this project')
-      const isExist = await sprints.toObject().find(item => item.active == true)
-      if(isExist) throw new Error('Have been sprints started')
+      const sprints = await sprintRepository.getListSprintByParams({ project });
+      if (!sprints) throw new Error("Not found sprints of this project");
+      const isExist = await sprints.find(item => item.active == true);
+      if (isExist) throw new Error("Have been sprints started");
       // const query = {
       //   ...req.body,
       // }
+      const workflow = [
+        {
+          project,
+          sprint: sprintId,
+          name: "TO DO",
+          sequence: 1
+        },
+        {
+          project,
+          sprint: sprintId,
+          name: "IN PROGRESS",
+          sequence: 2
+        },
+        {
+          project,
+          sprint: sprintId,
+          name: "DONE",
+          sequence: 3
+        }
+      ];
+      workflow.map(async item => {
+        await workflowRepository.create(item);
+      });
+      // console.log(workflowTodo)
+      const issues = await issueRepository.getListIssueByParams({
+        project,
+        sprint: sprintId
+      });
+      const workflowTodo = await workflowRepository.getWorkflow({
+        name: 'TO DO'
+      });
+      if(!workflowTodo) throw new Error("Can't add all issues to 'TO DO' board")
+      issues.map(async issue => {
+        await issueRepository.update(issue._id, { workflow: workflowTodo._id });
+      });
+      const sprint = await sprintRepository.update(sprintId, { active });
+      if (!sprint) throw new Error("Can't start sprint");
 
-      const sprint = await sprintRepository.update(sprintId, data)
-      if(!sprint) throw new Error("Can't start sprint")
-
-      return res.json(new RequestResponse({
-        statusCode: 200,
-        data: sprint
-      }))
+      return res.json(
+        new RequestResponse({
+          statusCode: 200,
+          data: sprint
+        })
+      );
     } catch (error) {
-      return res.json(new RequestResponse({
-        statusCode: 400,
-        success: false,
-        error
-      }))
+      return res.json(
+        new RequestResponse({
+          statusCode: 400,
+          success: false,
+          error
+        })
+      );
     }
-  }
+  };
 
   completeSprint = async (req, res, next) => {
-    const {project} = req.body
-    const data = req.body
-    const sprintId = req.body.sprint
-    const userId = req.userId
+    const { project } = req.body;
+    const data = req.body;
+    const sprintId = req.body.sprint;
+    const userId = req.userId;
     try {
-      const sprints = await sprintRepository.getListSprintByParams({project})
-      if(!sprints) throw new Error('Not found sprints of this project')
+      const sprints = await sprintRepository.getListSprintByParams({ project });
+      if (!sprints) throw new Error("Not found sprints of this project");
 
-      const sprint = await sprintRepository.update(sprintId, data)
-      if(!sprint) throw new Error("Can't start sprint")
+      const sprint = await sprintRepository.update(sprintId, data);
+      if (!sprint) throw new Error("Can't start sprint");
 
-      return res.json(new RequestResponse({
-        statusCode: 200,
-        data: sprint
-      }))
+      return res.json(
+        new RequestResponse({
+          statusCode: 200,
+          data: sprint
+        })
+      );
     } catch (error) {
-      return res.json(new RequestResponse({
-        statusCode: 400,
-        success: false,
-        error
-      }))
+      return res.json(
+        new RequestResponse({
+          statusCode: 400,
+          success: false,
+          error
+        })
+      );
     }
-  }
+  };
 }
 
 export default SprintController;

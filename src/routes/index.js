@@ -14,6 +14,7 @@ import AssignIssueRoute from './assignIssue.route'
 import ProjectTypeRoute from './projectType.route'
 import SprintRoute from './sprint.route'
 import LabelRoute from './label.route'
+import WorkflowRoute from './workflow.route'
 
 // Handler route
 router.use('/auth', AuthRoute)
@@ -29,5 +30,6 @@ router.use('/assignIssue', AssignIssueRoute)
 router.use('/projectType', ProjectTypeRoute)
 router.use('/sprint', SprintRoute)
 router.use('/label', LabelRoute)
+router.use('/workflow', WorkflowRoute)
 
 module.exports = router
