@@ -10,7 +10,7 @@ class UploadController {
         return res.json(new RequestResponse({
           success: false,
           statusCode: 422,
-          error: ['File Upload is not valid'],
+          error: 'File Upload is not valid',
           data: {
             filePath: '',
             fileName: ''
