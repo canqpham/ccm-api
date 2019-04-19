@@ -15,7 +15,7 @@ import ProjectTypeRoute from './projectType.route'
 import SprintRoute from './sprint.route'
 import LabelRoute from './label.route'
 import WorkflowRoute from './workflow.route'
-
+import UploadRoute from './upload.route'
 // Handler route
 router.use('/auth', AuthRoute)
 router.use('/book', BookRoute)
@@ -31,5 +31,5 @@ router.use('/projectType', ProjectTypeRoute)
 router.use('/sprint', SprintRoute)
 router.use('/label', LabelRoute)
 router.use('/workflow', WorkflowRoute)
-
+router.use('/upload', UploadRoute)
 module.exports = router
