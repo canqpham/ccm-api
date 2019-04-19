@@ -11,6 +11,4 @@ router.post('/', Authenticate(),  groupController.create);
 router.get('/', Authenticate(),  groupController.getListAll);
 router.put('/:id', Authenticate(),  groupController.update);
 
-// router.post('/', userController.register);
-
 module.exports = router;
