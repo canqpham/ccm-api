@@ -20,6 +20,11 @@ class WorkflowRepository {
       return workflow
   }
 
+  getListByParams = async (data) => {
+    const workflows = await Workflow.find(data)
+    return workflows
+  }
+
   getListAll = async () => {
       const workflows = await Workflow.find()
       return workflows

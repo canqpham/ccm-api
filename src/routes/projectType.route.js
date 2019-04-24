@@ -13,6 +13,7 @@ const projectTypeController = new ProjectTypeController();
 // Route and method: GET POST PUT DELETE
 router.post('/', Authenticate(),  projectTypeController.create);
 router.get('/', Authenticate(),  projectTypeController.getListAll);
+router.put('/:id', Authenticate(),  projectTypeController.update);
 
 // router.post('/', userController.register);
 

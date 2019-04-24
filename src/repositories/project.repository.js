@@ -14,8 +14,13 @@ class ProjectRepository {
     return project
   }
 
-  getProject = async (id) => {
+  getProjectById = async (id) => {
     const project = await Project.findById(id)
+    return project
+  }
+
+  getProjectByParams = async (data) => {
+    const project = await Project.findOne(data)
     return project
   }
 }

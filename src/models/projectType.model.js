@@ -8,6 +8,7 @@ const ProjectTypeSchema = new Schema(
   {
     name: {type: String, required: true}, // story, bug, epic
     description: {type: String},
+    logo: {type: String},
   },
   {
     collection: 'projectTypes',

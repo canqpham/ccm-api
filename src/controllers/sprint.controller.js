@@ -192,33 +192,7 @@ class SprintController {
       if (!sprints) throw new Error("Not found sprints of this project");
       const isExist = await sprints.find(item => item.active == true);
       if (isExist) throw new Error("Have been sprints started");
-      // const query = {
-      //   ...req.body,
-      // }
-      const workflow = [
-        {
-          project,
-          sprint: sprintId,
-          name: "TO DO",
-          sequence: 1
-        },
-        {
-          project,
-          sprint: sprintId,
-          name: "IN PROGRESS",
-          sequence: 2
-        },
-        {
-          project,
-          sprint: sprintId,
-          name: "DONE",
-          sequence: 3
-        }
-      ];
-      workflow.map(async item => {
-        await workflowRepository.create(item);
-      });
-      // console.log(workflowTodo)
+
       const issues = await issueRepository.getListIssueByParams({
         project,
         sprint: sprintId
@@ -226,6 +200,7 @@ class SprintController {
       const workflowTodo = await workflowRepository.getWorkflow({
         name: 'TO DO'
       });
+      
       if(!workflowTodo) throw new Error("Can't add all issues to 'TO DO' board")
       issues.map(async issue => {
         await issueRepository.update(issue._id, { workflow: workflowTodo._id });

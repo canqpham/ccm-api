@@ -6,7 +6,7 @@ const { ObjectId } = Schema.Types;
 
 const WorkflowSchema = new Schema(
   {
-    sprint: {type: ObjectId, ref: 'sprints'},
+    // sprint: {type: ObjectId, ref: 'sprints'},
     project: {type: ObjectId, ref: 'projects'},
     name: {type: String, required: true}, // to do, in progress, test, deploy, done or 1 2 3 4 5
     // start: {type: Boolean},

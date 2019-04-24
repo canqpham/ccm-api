@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
-// const { ObjectId } = mongoose.Types;
+const { ObjectId } = Schema.Types;
 
 const IssueStatusSchema = new Schema(
   {
+    project: {type: ObjectId, ref: 'projects'},
     status: {type: String, required: true, emun: ['to do', 'in progress', 'done']}, // to do, in progress, done
     description: {type: String},
     iconUrl: {type: String}
