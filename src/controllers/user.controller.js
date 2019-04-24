@@ -12,12 +12,16 @@ class UserController {
       
             //Initialize token
             // let token = await this._signToken(user);
-            return res.json({ user });
+            return res.json(new RequestResponse({
+              data: user,
+              statusCode: 200
+            }));
           } catch (error) {
-            console.log('error.status: ', error.status)
-            return res.status(error.status || 500).json({
-              message: error.message
-            });
+            return res.json(new RequestResponse({
+              error,
+              statusCode: 400,
+              success: false
+            }));
           }
     }
 
