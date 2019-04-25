@@ -13,9 +13,9 @@ const IssueSchema = new Schema(
     summary: {type: String, required: true},
     description: {type: String},
     priority: {type: ObjectId, ref: 'priorities'},
-    issueStatus: {type: ObjectId, ref: 'issueStatus'}, // to do, in progress, test, done
+    // issueStatus: {type: ObjectId, ref: 'issueStatus'}, // to do, in progress, test, done
     sprint: {type: ObjectId, ref: 'sprints'},
-    workflow: {type: ObjectId, ref: 'workflow'},
+    workflow: {type: ObjectId, ref: 'workflow'}, // to do, in progress, test, done
     attachs: [{type: String}], // Save url of file
     subTaskOfIssue: {type: ObjectId, ref: 'issues'}, // a subTask belong only issue
     label: {type: ObjectId, ref: 'labels'},

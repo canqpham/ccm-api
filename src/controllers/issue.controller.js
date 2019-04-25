@@ -1,13 +1,13 @@
 import IssueRepository from '../repositories/issue.repository'
 import AssignIssueRepository from '../repositories/assignIssue.repository'
-import IssueStatusRepository from '../repositories/issueStatus.repository'
+import WorkflowRepository from '../repositories/workflow.repository'
 import UserRepository from '../repositories/user.repository'
 import { RequestResponse } from '../utils/common'
 
 import _ from 'lodash'
 
 const issueRepository = new IssueRepository()
-const issueStatusRepository = new IssueStatusRepository()
+const workflowRepository = new WorkflowRepository()
 const userRepository = new UserRepository()
 const assignIssueRepository = new AssignIssueRepository()
 class IssueController {
@@ -18,11 +18,11 @@ class IssueController {
             //handler login
             const user = await userRepository.getUserInfo(userId)
             if(!user) throw new Error("Your account can't create issue.")
-            const issueStatus = await issueStatusRepository.getIssueStatus({status: 'to do'})
+            const workflow = await workflowRepository.getWorkflow({name: 'TO DO'})
             data = {
                 ...data,
                 creator: user.fullName,
-                issueStatus: issueStatus._id
+                workflow: workflow._id
             }
             let issue = await issueRepository.create(data)
             if (!issue) throw new Error("Can't create issue.")
