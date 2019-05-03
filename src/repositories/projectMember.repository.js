@@ -8,6 +8,11 @@ class ProjectMemberRepository {
         return projectMember
     }
 
+    getByParams = async (data) => {
+        const result = await ProjectMember.find({data}).populate('project')
+        return result
+    }
+
     getListByUserId = async (id) => {
         const result = await ProjectMember.find({member: id}).populate('project').sort('-updatedAt')
         return result

@@ -5,11 +5,12 @@ class AssignIssueRepository {
 
   create = async (data) => {
     const assignIssue = await AssignIssue.create(data);
+    // return assignIssue.populate('assignee')
     return assignIssue;
   }
 
   getAssignIssue = async (data) => {
-    const assignIssue = await AssignIssue.findOne(data)
+    const assignIssue = await AssignIssue.findOne(data).populate('assignee issue')
     return assignIssue
   }
 

@@ -159,6 +159,26 @@ class ProjectController {
     }
   }
 
+  addMemberToProject = async (req, res, next) => {
+    try {
+      const data = req.body
+      const temp = await projectMemberRepository.getByParams({member: data.member, project: data.project})
+      if(!temp) throw new Error ("Member is exist.")
+      let projectMember = await projectMemberRepository.create(data)
+      if(!projectMember) throw new Error("Can't add member to project")
+      return res.json(new RequestResponse({
+        statusCode: 200,
+        data: projectMember
+      }))
+    } catch (error) {
+      return res.json(new RequestResponse({
+        success: false,
+        statusCode: 200,
+        error
+      }))
+    }
+  }
+
 }
 
 export default ProjectController
