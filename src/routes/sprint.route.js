@@ -13,14 +13,14 @@ const sprintController = new SprintController();
 
 // Route and method: GET POST PUT DELETE
 router.post('/', Authenticate(),  sprintController.create);
-router.post('/addIssue', Authenticate(),  sprintController.addIssueToSprint);
-router.get('/:id', Authenticate(),  sprintController.getSprint);
-router.get('/notComplete', Authenticate(),  sprintController.getListSprintNotComplete);
 router.get('/', Authenticate(),  sprintController.getListAll);
 router.put('/', Authenticate(),  sprintController.update);
+router.post('/addIssue', Authenticate(),  sprintController.addIssueToSprint);
+router.get('/notComplete', Authenticate(),  sprintController.getListSprintNotComplete);
 router.post('/start', Authenticate(), sprintController.startSprint)
 router.post('/complete', Authenticate(), sprintController.completeSprint)
 router.get('/active', Authenticate(), sprintController.getSprintActive)
+router.get('/:id', Authenticate(),  sprintController.getSprint);
 
 
 module.exports = router;

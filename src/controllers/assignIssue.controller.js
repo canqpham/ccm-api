@@ -1,12 +1,14 @@
 import AssignIssueRepository from "../repositories/assignIssue.repository";
 import UserRepository from "../repositories/user.repository";
 import ProjectMemberRepository from "../repositories/projectMember.repository";
+import ActivityRepository from "../repositories/activity.repository"
 import emailHelper from '../utils/emailHelper'
 import { RequestResponse } from "../utils/common";
 
 const assignIssueRepository = new AssignIssueRepository();
 const projectMemberRepository = new ProjectMemberRepository();
-// const userRepository = new UserRepository()
+const activityRepository = new ActivityRepository()
+const userRepository = new UserRepository()
 
 class AssignIssueController {
   create = async (req, res, next) => {
@@ -30,15 +32,22 @@ class AssignIssueController {
       let assignIssue = await assignIssueRepository.create(data);
       if (!assignIssue) throw new Error("Can't assign to issue.");
 
-      const temp = await assignIssueRepository.getAssignIssue({_id: assignIssue._id })
-      // console.log(temp.assignee.email)
+      const temp = await assignIssueRepository.getAssignIssue({_id: assignIssue._id }) //ng dc assign va issue
+      const user = await userRepository.getUserInfo(userId)
+      console.log(temp)
+
+      const paramsActivity = {
+        issue: data.issue,
+        content: `${user.displayName} assigned ${temp.assignee.displayName}`
+      }
+      activityRepository.create(paramsActivity) // create activity
+
       emailHelper.sendEmailStandard({to: temp.assignee.email, userName: temp.assignee.displayName, subject: 'Notification to assign task' }, `<h2>Hi ${temp.assignee.fullName}, You are assigned to Task #${temp.issue.issueKey} </h2>`)
       //Initialize token
       // let token = await this._signToken(user)
       return res.json(
         new RequestResponse({
           statusCode: 200,
-          data: temp
         })
       );
     } catch (error) {
@@ -55,7 +64,16 @@ class AssignIssueController {
   remove = async (req, res, next) => {
     try {
       const id = req.params.id
+      const userId = req.userId
       const temp = await assignIssueRepository.getAssignIssue({_id: id})
+      const user = await userRepository.getUserInfo(userId)
+      console.log(temp)
+
+      const paramsActivity = {
+        issue: temp.issue._id,
+        content: `${user.displayName} removed ${temp.assignee.displayName}`
+      }
+      activityRepository.create(paramsActivity) // create activity
       emailHelper.sendEmailStandard(
         {
           to: temp.assignee.email,

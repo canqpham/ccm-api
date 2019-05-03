@@ -127,7 +127,15 @@ class SprintRepository {
   }
 
   getListSprintByParams = async (params) => {
-    const sprints = await Sprint.find(params)
+    const sprints = await Sprint.aggregate([
+      {
+        $match: {
+        "project": mongoose.Types.ObjectId(params.project),
+        "completed": params.completed
+        },
+      },
+    ])
+    // console.log(sprints)
     return sprints
   }
 

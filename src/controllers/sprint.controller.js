@@ -111,56 +111,57 @@ class SprintController {
     }
   };
 
-  getSprint= async (req, res, next) => {
+  getSprint = async (req, res, next) => {
+    // console.log(req)
     let id = req.params.id;
     let userId = req.userId;
-    // try {
-    //   let sprint = await sprintRepository.getSprintById({ _id: id });
-    //   if (!sprint) throw new Error("Can't get sprint");
+    try {
+      let sprint = await sprintRepository.getSprintById(id);
+      if (!sprint) throw new Error("Can't get sprint");
 
-    //   return res.json(
-    //     new RequestResponse({
-    //       data: sprint,
-    //       statusCode: 200
-    //     })
-    //   );
-    // } catch (error) {
-    //   return res.json(
-    //     new RequestResponse({
-    //       statusCode: 400,
-    //       success: false,
-    //       error
-    //     })
-    //   );
-    // }
+      return res.json(
+        new RequestResponse({
+          data: sprint,
+          statusCode: 200
+        })
+      );
+    } catch (error) {
+      return res.json(
+        new RequestResponse({
+          statusCode: 400,
+          success: false,
+          error
+        })
+      );
+    }
   };
 
   getListSprintNotComplete = async (req, res, next) => {
-    // let params = req.query; 
-    console.log('not completed', req.query)
+    let params = req.query;
     let userId = req.userId;
-    // try {
-    //   const queryParams = {
-    //     query: JSON.parse(params.query)
-    //   } 
-    //   let sprints = await sprintRepository.getListSprintByParams(queryParams.query);
-    //   if (!sprints) throw new Error("Can't get list sprints");
+    try {
+      const queryParams = JSON.parse(params.query)
+      // console.log(queryParams)
+      
+      let sprints = await sprintRepository.getListSprintByParams(queryParams);
+      // console.log(sprints)
+      if (!sprints) throw new Error("Can't get list sprints");
 
-    //   return res.json(
-    //     new RequestResponse({
-    //       data: sprints,
-    //       statusCode: 200
-    //     })
-    //   );
-    // } catch (error) {
-    //   return res.json(
-    //     new RequestResponse({
-    //       statusCode: 400,
-    //       success: false,
-    //       error
-    //     })
-    //   );
-    // }
+      return res.json(
+        new RequestResponse({
+          data: sprints,
+          statusCode: 200
+        })
+      );
+    } catch (error) {
+      return res.json(
+        new RequestResponse({
+          statusCode: 400,
+          success: false,
+          error
+        })
+      );
+    }
   };
 
   addIssueToSprint = async (req, res, next) => {
