@@ -6,11 +6,8 @@ const { ObjectId } = Schema.Types;
 
 const ActivitySchema = new Schema(
   {
-    withPeople: {type: Boolean},
-    withIssue: {type: Boolean},
-    content: {type: String, required: true},
-    creator: {type: ObjectId, ref: 'users'},
     issue: {type: ObjectId, ref: 'issues'},
+    content: {type: String, required: true},
   },
   {
     collection: 'activities',

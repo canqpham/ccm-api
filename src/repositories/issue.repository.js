@@ -89,6 +89,16 @@ class IssueRepository {
           ],
           as: "comments"
         }
+      },
+      {
+        $lookup: {
+          from: "activities",
+          pipeline: [
+            { $match: { issue: mongoose.Types.ObjectId(id) } },
+            { $sort: { createdAt: -1}}
+          ],
+          as: "activities"
+        }
       }
     ]);
     return issue;
