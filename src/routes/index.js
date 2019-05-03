@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router()
 // Route Modules
 import AuthRoute from './auth.route'
-import BookRoute from './book.route'
 import ProjectRoute from './project.route'
 import GroupRoute from './group.route'
 import UserRoute from './user.route'
@@ -16,9 +15,10 @@ import SprintRoute from './sprint.route'
 import LabelRoute from './label.route'
 import WorkflowRoute from './workflow.route'
 import UploadRoute from './upload.route'
+import ReleaseVersionRoute from './releaseVersion.route'
+
 // Handler route
 router.use('/auth', AuthRoute)
-router.use('/book', BookRoute)
 router.use('/project', ProjectRoute)
 router.use('/group', GroupRoute)
 router.use('/user', UserRoute)
@@ -32,4 +32,6 @@ router.use('/sprint', SprintRoute)
 router.use('/label', LabelRoute)
 router.use('/workflow', WorkflowRoute)
 router.use('/upload', UploadRoute)
+router.use('/releaseVersion', ReleaseVersionRoute)
+
 module.exports = router

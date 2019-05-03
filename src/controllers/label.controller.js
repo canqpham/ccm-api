@@ -30,6 +30,24 @@ class LabelController {
           }
     }
 
+    getListByProjectId = async (req, res, next) => {
+        try {
+            const project = req.params.project
+            let labels = await labelRepository.getListByParams({project})
+            if(!labels) throw new Error("Can't get list labels")
+            return res.json( new RequestResponse({
+                data: labels,
+                statusCode: 200
+            }))
+        } catch (error) {
+            return res.json( new RequestResponse({
+                success: false,
+                statusCode: 400,
+                error
+            }))
+        }
+    }
+
     getListAll = async (req, res, next) => {
         try {
             let labels = await labelRepository.getListAll()

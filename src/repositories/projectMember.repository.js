@@ -9,7 +9,7 @@ class ProjectMemberRepository {
     }
 
     getListByUserId = async (id) => {
-        const result = await ProjectMember.find({member: id}).populate('project')
+        const result = await ProjectMember.find({member: id}).populate('project').sort('-updatedAt')
         return result
     }
 

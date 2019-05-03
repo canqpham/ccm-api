@@ -23,7 +23,8 @@ const IssueSchema = new Schema(
     resloved: {type: Date},
     estimateTime: {type: String},
     actualTime: {type: String},
-    vote: {type: Number}
+    vote: {type: Number},
+    version: {type: ObjectId, ref: 'versions'},
   },
   {
     collection: 'issues',

@@ -19,6 +19,11 @@ class LabelRepository {
       return label
   }
 
+  getListByParams = async (data) => {
+    const labels = await Label.find(data)
+      return labels
+  }
+
   getListAll = async () => {
       const labels = await Label.find()
       return labels

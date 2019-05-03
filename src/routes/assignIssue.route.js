@@ -12,7 +12,7 @@ const assignIssueController = new AssignIssueController();
 
 // Route and method: GET POST PUT DELETE
 router.post('/', Authenticate(),  assignIssueController.create);
-
+router.delete('/:id', Authenticate(), assignIssueController.remove);
 // router.post('/', userController.register);
 
 module.exports = router;

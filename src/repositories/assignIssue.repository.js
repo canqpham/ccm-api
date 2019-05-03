@@ -27,6 +27,11 @@ class AssignIssueRepository {
       const assignIssues = await AssignIssue.find({issue: id}).populate('assignee')
       return assignIssues
   }
+
+  remove = async id => {
+    const assignIssue = await AssignIssue.findByIdAndRemove(id)
+    return assignIssue
+  }
 }
 
 export default AssignIssueRepository;
