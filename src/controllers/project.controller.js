@@ -107,8 +107,9 @@ class ProjectController {
       const paramsQuery = {
         query: JSON.stringify({member: userId}),
         populate: params.populate || 'member project group',
-        pageSize: params.pageSize || 5,
-        pageNumber: params.pageNumber || 1
+        pageSize: params.pageSize || 10,
+        pageNumber: params.pageNumber || 1,
+        sort: JSON.stringify({updatedAt: -1})
     }
       let [projects, count] = await projectMemberRepository.getListByParams(paramsQuery)
       if (!projects || count == 0) throw new Error("Can't get projects")
