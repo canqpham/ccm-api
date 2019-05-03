@@ -4,18 +4,24 @@ import WorkflowRepository from "../repositories/workflow.repository";
 import moment from "moment";
 
 import { RequestResponse } from "../utils/common";
+import ProjectRepository from "../repositories/project.repository";
 
 const sprintRepository = new SprintRepository();
 const workflowRepository = new WorkflowRepository();
 const issueRepository = new IssueRepository();
+const projectRepository = new ProjectRepository();
 
 class SprintController {
   constructor() {}
 
   create = async (req, res, next) => {
     let data = req.body;
+    let projectId = req.body.project
     let userId = req.userId;
     try {
+      const project = await projectRepository.getProjectById(projectId)
+      if(!project) throw new Error("Cannot find project to create new sprint.")
+
       const sprint = await sprintRepository.create(data);
       if (!sprint) throw new Error("Can't create sprint");
       return res.json(

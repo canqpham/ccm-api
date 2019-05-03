@@ -14,6 +14,7 @@ class SprintRepository {
     const sprint = await this.getSprintById(id)
     return sprint
   }
+  
 
   getSprintById = async (id) => {
     const sprint = await Sprint.aggregate([
