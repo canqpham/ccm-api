@@ -1,5 +1,7 @@
 import Issue from "../models/issue.model";
 import mongoose from "mongoose";
+import helper from '../utils/helper';
+
 class IssueRepository {
   constructor() {}
 
@@ -17,10 +19,15 @@ class IssueRepository {
     return issue;
   };
 
-  getListIssueByParams = async data => {
-    const issues = await Issue.find(data);
-    return issues;
-  };
+  getListIssueByParams = async (data) => {
+    const result = await Issue.find(data)
+    return result
+  }
+
+  getListByParams = async (params) => {
+    const [result, count] = await helper.getListItem(Issue, params)
+    return [result, count]
+}
 
   getAllIssueByProjectId = async id => {
     const issues = await Issue.find({ project: id });

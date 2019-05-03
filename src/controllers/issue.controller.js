@@ -42,16 +42,29 @@ class IssueController {
           }
     }
 
-    getAllInProject = async (req, res, next) => {
+    getListIssue = async (req, res, next) => {
       // console.log(req)
-      const id = req.params.id
+      const params = req.query
       const userId = req.userId
+      // console.log(JSON.parse(params.query))
       try {
-        let issues = await issueRepository.getAllIssueByProjectId(id)
+        const paramsQuery = {
+          query: params.query,
+          populate: params.populate || '',
+          pageSize: params.pageSize || 5,
+          pageNumber: params.pageNumber || 1,
+        }
+        let [issues, count] = await issueRepository.getListByParams(paramsQuery)
         if(!issues) throw new Error("Can't get all issue")
         return res.json(new RequestResponse({
           statusCode: 200,
-          data: issues
+          data: issues,
+          meta: {
+            total: count,
+            pages: Math.ceil(count /  (paramsQuery.pageSize)),
+            pageSize:  Number(paramsQuery.pageSize),
+            page: Number(paramsQuery.pageNumber)
+          }
         }))
       } catch (error) {
         return res.json(new RequestResponse({
@@ -66,9 +79,9 @@ class IssueController {
         const id = req.params.id
         let userId = req.userId
         // console.log(req)
-        req.io.on('get_issue', () => {
-          console.log('issue get info')
-        })
+        // req.io.on('get_issue', () => {
+        //   console.log('issue get info')
+        // })
         try {
           let issue = await issueRepository.getIssueInfo(id)
           if(!issue) throw new Error('Issue is not found')
@@ -120,7 +133,6 @@ class IssueController {
         if(!issue) throw new Error("Can't remove issue")
         return res.json(new RequestResponse({
           statusCode: 200,
-          data: issue
         }))
       } catch (error) {
         return res.json(new RequestResponse({

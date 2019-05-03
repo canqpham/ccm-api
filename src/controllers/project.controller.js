@@ -4,6 +4,7 @@ import GroupRepository from '../repositories/group.repository'
 import WorkflowRepository from '../repositories/workflow.repository'
 import IssueTypeRepository from '../repositories/issueType.repository'
 import { RequestResponse } from '../utils/common'
+import emailHelper from '../utils/emailHelper'
 import _ from 'lodash'
 
 const projectRepository = new ProjectRepository();
@@ -98,14 +99,29 @@ class ProjectController {
 
   getListAllProjectByUserId = async (req, res, next) => {
     let userId = req.userId
+    let params = req.query
     try {
       //handler
-      let projects = await projectMemberRepository.getListByUserId(userId)
-      if (!projects) throw new Error("Can't get projects")
+      // console.log(req)
+
+      const paramsQuery = {
+        query: JSON.stringify({member: userId}),
+        populate: params.populate || 'member project group',
+        pageSize: params.pageSize || 5,
+        pageNumber: params.pageNumber || 1
+    }
+      let [projects, count] = await projectMemberRepository.getListByParams(paramsQuery)
+      if (!projects || count == 0) throw new Error("Can't get projects")
 
       return res.json(new RequestResponse({
         data: projects,
-        statusCode: 200
+        statusCode: 200,
+        meta: {
+          total: count,
+          pages: Math.ceil(count /  (paramsQuery.pageSize)),
+          pageSize:  Number(paramsQuery.pageSize),
+          page: Number(paramsQuery.pageNumber)
+        }
       }))
     } catch (error) {
       return res.json(new RequestResponse({
@@ -163,12 +179,15 @@ class ProjectController {
     try {
       const data = req.body
       const temp = await projectMemberRepository.getByParams({member: data.member, project: data.project})
-      if(!temp) throw new Error ("Member is exist.")
+      if(temp) throw new Error ("Member is exist.")
       let projectMember = await projectMemberRepository.create(data)
+      let result = await projectMemberRepository.getByParams({_id: projectMember._id})
+      console.log(result)
+      emailHelper.sendEmailStandard({to: result.member.email, userName: result.member.displayName, subject: 'CCM | Notification to add to Project' }, `<h2>Hi ${result.member.fullName}, You are added to project ${result.project.name} </h2>`)
       if(!projectMember) throw new Error("Can't add member to project")
       return res.json(new RequestResponse({
         statusCode: 200,
-        data: projectMember
+        data: result
       }))
     } catch (error) {
       return res.json(new RequestResponse({

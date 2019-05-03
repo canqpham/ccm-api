@@ -27,7 +27,7 @@ class VersionController {
   getListByProject = async (req, res, next) => {
     let userId= req.userId
     try {
-      const project = req.params.project
+      const project = req.query.project
       const versions = await versionRepository.getListVersionByParams({project})
       if(!versions) throw new Error("Can't get list version")
       return res.json(new RequestResponse({
@@ -90,7 +90,6 @@ class VersionController {
             if(!version) throw new Error("Can't remove project type")
 
             return res.json(new RequestResponse({
-                data: version,
                 statusCode: 200
             }))
         } catch (error) {

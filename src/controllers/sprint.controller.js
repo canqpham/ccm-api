@@ -91,7 +91,6 @@ class SprintController {
 
       return res.json(
         new RequestResponse({
-          data: sprint,
           statusCode: 200
         })
       );
@@ -106,12 +105,12 @@ class SprintController {
     }
   };
 
-  getSprint = async (req, res, next) => {
+  getSprint= async (req, res, next) => {
     let id = req.params.id;
     let userId = req.userId;
     try {
-      let sprint = await sprintRepository.getSprint({ _id: id });
-      if (!sprint) throw new Error("Can't remove sprint");
+      let sprint = await sprintRepository.getSprintById({ _id: id });
+      if (!sprint) throw new Error("Can't get sprint");
 
       return res.json(
         new RequestResponse({
@@ -131,7 +130,7 @@ class SprintController {
   };
 
   getListSprintNotComplete = async (req, res, next) => {
-    let { completed, project } = req.params;
+    let { completed, project } = req.query;
     let userId = req.userId;
     try {
       let sprints = await sprintRepository.getListSprintByParams({
@@ -253,6 +252,25 @@ class SprintController {
       );
     }
   };
+
+  getSprintActive = async (req, res, next) => {
+    try {
+      const params = req.query
+      const query = JSON.parse(params.query)
+      const sprint = await sprintRepository.getSprintActiveInProject(query)
+      if(!sprint) throw new Error("Cannot get sprint is actived.")
+      return res.json( new RequestResponse({
+        data: sprint,
+        statusCode: 200,
+      }))
+    } catch (error) {
+      new RequestResponse({
+        statusCode: 400,
+        success: false,
+        error
+      })
+    }
+  }
 }
 
 export default SprintController;

@@ -80,7 +80,6 @@ class PriorityController {
             if(!priority) throw new Error("Can't remove priority")
 
             return res.json(new RequestResponse({
-                data: priority,
                 statusCode: 200
             }))
         } catch (error) {

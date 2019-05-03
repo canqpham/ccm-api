@@ -71,7 +71,6 @@ class ProjectTypeController {
             if(!projectType) throw new Error("Can't remove project type")
 
             return res.json(new RequestResponse({
-                data: projectType,
                 statusCode: 200
             }))
         } catch (error) {

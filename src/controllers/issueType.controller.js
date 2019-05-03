@@ -75,7 +75,6 @@ class IssueTypeController {
             if(!issueType) throw new Error("Can't remove issue type")
 
             return res.json(new RequestResponse({
-                data: issueType,
                 statusCode: 200
             }))
         } catch (error) {

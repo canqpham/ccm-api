@@ -8,7 +8,7 @@ import IssueController from '../controllers/issue.controller'
 const issueController = new IssueController()
 
 router.post('/', Authenticate(),  issueController.create)
-router.get('/all/:id', Authenticate(), issueController.getAllInProject)
+router.get('/listIssues', Authenticate(), issueController.getListIssue)
 router.get('/:id', Authenticate(), issueController.getIssueInfo)
 router.put('/:id', Authenticate(), issueController.update)
 router.delete('/:id', Authenticate(), issueController.remove)

@@ -76,7 +76,6 @@ class IssueStatusController {
             if(!issueStatus) throw new Error("Can't remove issue status")
 
             return res.json(new RequestResponse({
-                data: issueStatus,
                 statusCode: 200
             }))
         } catch (error) {

@@ -10,7 +10,6 @@ import IssueController from '../controllers/issue.controller';
 
 // Create new Controller contructor
 const sprintController = new SprintController();
-const issueController = new IssueController();
 
 // Route and method: GET POST PUT DELETE
 router.post('/', Authenticate(),  sprintController.create);
@@ -21,7 +20,7 @@ router.get('/', Authenticate(),  sprintController.getListAll);
 router.put('/', Authenticate(),  sprintController.update);
 router.post('/start', Authenticate(), sprintController.startSprint)
 router.post('/complete', Authenticate(), sprintController.completeSprint)
-router.get('/active', Authenticate(), sprintController.getSprint)
+router.get('/active', Authenticate(), sprintController.getSprintActive)
 
 
 module.exports = router;

@@ -24,9 +24,12 @@ class AssignIssueController {
       // console.log(isProjectExist)
       if (!isUserExistInProject)
         throw new Error("Can't assign this account to project.");
-
+      let isAssignExist = await assignIssueRepository.getAssignIssue({issue: data.issue, assignee: data.assignee})
+      if(isAssignExist) throw new Error("Member is assigned. Cannot assign again.")
+        // console.log(isAssignExist)
       let assignIssue = await assignIssueRepository.create(data);
       if (!assignIssue) throw new Error("Can't assign to issue.");
+
       const temp = await assignIssueRepository.getAssignIssue({_id: assignIssue._id })
       // console.log(temp.assignee.email)
       emailHelper.sendEmailStandard({to: temp.assignee.email, userName: temp.assignee.displayName, subject: 'Notification to assign task' }, `<h2>Hi ${temp.assignee.fullName}, You are assigned to Task #${temp.issue.issueKey} </h2>`)
@@ -52,11 +55,18 @@ class AssignIssueController {
   remove = async (req, res, next) => {
     try {
       const id = req.params.id
+      const temp = await assignIssueRepository.getAssignIssue({_id: id})
+      emailHelper.sendEmailStandard(
+        {
+          to: temp.assignee.email,
+          userName: temp.assignee.displayName,
+          subject: 'Notification to assign task'
+        },
+        `<h2>Hi ${temp.assignee.fullName}, You have been removed from the task #${temp.issue.issueKey} </h2>`)
       const assignIssue = await assignIssueRepository.remove(id)
       if(!assignIssue) throw new Error("Cannot remove user from list assignees")
       return res.json( new RequestResponse({
         statusCode: 200,
-        data: assignIssue,
       }))
     } catch (error) {
       res.json(
