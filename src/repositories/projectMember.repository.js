@@ -33,6 +33,11 @@ class ProjectMemberRepository {
         const result = await ProjectMember.find({project: id}).sort('-updatedAt')
         return result
     }
+
+    remove = async (id) => {
+        const result = await ProjectMember.findByIdAndRemove(id)
+        return result
+    }
 }
 
 export default ProjectMemberRepository

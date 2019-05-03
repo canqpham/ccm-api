@@ -23,6 +23,11 @@ class ProjectRepository {
     const project = await Project.findOne(data)
     return project
   }
+
+  remove = async (id) => {
+    const project = await Project.findByIdAndRemove(id)
+    return project
+  }
 }
 
 export default ProjectRepository;

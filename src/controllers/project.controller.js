@@ -6,13 +6,16 @@ import IssueTypeRepository from '../repositories/issueType.repository'
 import { RequestResponse } from '../utils/common'
 import emailHelper from '../utils/emailHelper'
 import _ from 'lodash'
+import UserRepository from '../repositories/user.repository';
+import mongoose from 'mongoose'
 
 const projectRepository = new ProjectRepository();
 const projectMemberRepository = new ProjectMemberRepository()
-const groupRepository = new GroupRepository()
+const userRepository = new UserRepository()
 const workflowRepository = new WorkflowRepository()
 const issueTypeRepository = new IssueTypeRepository()
 
+// const ObjectId = mongoose.Types
 class ProjectController {
   create = async (req, res, next) => {
     let data = req.body
@@ -188,6 +191,29 @@ class ProjectController {
       return res.json(new RequestResponse({
         statusCode: 200,
         data: result
+      }))
+    } catch (error) {
+      return res.json(new RequestResponse({
+        success: false,
+        statusCode: 200,
+        error
+      }))
+    }
+  }
+
+  remove = async (req, res, next) => {
+    try {
+      const userId = req.userId
+      const id = req.params.id
+      // console.log(userId)
+      const project = await projectRepository.getProjectByParams({_id: id, lead: userId})
+      console.log(project)
+      if(!project) throw new Error("User does not have permission to remove project")
+
+      const projectMember = await projectMemberRepository.getListUserByProjectId(id)
+      await projectRepository.remove(id) && projectMember.map( item =>  projectMemberRepository.remove(item._id))
+      return res.json(new RequestResponse({
+        statusCode: 200
       }))
     } catch (error) {
       return res.json(new RequestResponse({

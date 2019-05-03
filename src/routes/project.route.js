@@ -12,5 +12,5 @@ router.get('/', Authenticate(), projectController.getListAllProjectByUserId)
 router.get('/:id', Authenticate(), projectController.getProjectInfo)
 router.put('/:id', Authenticate(), projectController.update)
 router.post('/addMember', Authenticate(), projectController.addMemberToProject)
-
+router.delete('/:id', Authenticate(), projectController.remove)
 module.exports = router;
