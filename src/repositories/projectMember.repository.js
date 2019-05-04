@@ -1,5 +1,7 @@
 import ProjectMember from '../models/projectMember.model'
 import helper from '../utils/helper';
+import mongoose from 'mongoose';
+
 class ProjectMemberRepository {
     constructor() { }
 
@@ -24,9 +26,43 @@ class ProjectMemberRepository {
     //     return result
     // }
 
-    getListByParams= async (params) => {
-        const [result, count] = await helper.getListItem(ProjectMember, params)
-        return [result, count]
+    getListByParams= async (userId) => {
+        const result = await ProjectMember.aggregate([
+            {
+                $match: {
+                    member: mongoose.Types.ObjectId(userId)
+                }
+            },
+            {
+                $lookup: {
+                    from: 'workflow',
+                    localField: "project",
+                    foreignField: "project",
+                    as: 'workflow'
+                },
+            },
+            {
+                $lookup: {
+                    from: 'projects',
+                    localField: "project",
+                    foreignField: "_id",
+                    as: 'project'
+                },
+            },
+            {
+                $unwind: '$project'
+            },
+            {
+                $lookup: {
+                    from: 'issues',
+                    localField: "project._id",
+                    foreignField: "project",
+                    as: 'issues'
+                }
+            }
+            
+        ])
+        return [result, {}]
     }
 
     getListUserByProjectId = async (id) => {

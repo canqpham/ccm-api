@@ -59,16 +59,19 @@ class ProjectController {
         {
           project: project._id,
           name: "TO DO",
+          type: "TODO",
           sequence: 1
         },
         {
           project: project._id,
           name: "IN PROGRESS",
+          type: "INPROGRESS",
           sequence: 2
         },
         {
           project: project._id,
           name: "DONE",
+          type: "DONE",
           sequence: 3
         }
       ];
@@ -126,7 +129,7 @@ class ProjectController {
         pageNumber: params.pageNumber || 1,
         sort: JSON.stringify({updatedAt: -1})
     }
-      let [projects, count] = await projectMemberRepository.getListByParams(paramsQuery)
+      let [projects, count] = await issueRepository.getListProjectDashboard(userId)
       if (!projects || count == 0) throw new Error("Can't get projects")
 
       return res.json(new RequestResponse({

@@ -1,6 +1,8 @@
 import Issue from "../models/issue.model";
 import mongoose from "mongoose";
 import helper from '../utils/helper';
+import ProjectModel from "../models/project.model";
+import ProjectMemberModel from "../models/projectMember.model";
 
 class IssueRepository {
   constructor() {}
@@ -124,6 +126,94 @@ class IssueRepository {
     const issue = await Issue.findByIdAndRemove(id);
     return issue;
   };
+
+  getListProjectDashboard = async userId => {
+    const results = await ProjectMemberModel.aggregate([
+      {
+        $match: {
+          member: mongoose.Types.ObjectId(userId)
+        }
+      },
+      {
+        $lookup: {
+          from: "projects",
+          localField: "project",
+          foreignField: "_id",
+          as: "project"
+        }
+      },
+      {
+        $unwind: "$project"
+      },
+      {
+        $lookup: {
+          from: "issues",
+          localField: "project._id",
+          foreignField: "project",
+          as: "issues"
+        }
+      },
+      {
+        $unwind: "$issues"
+      },
+      {
+        $lookup: {
+          from: "workflow",
+          localField: "issues.workflow",
+          foreignField: "_id",
+          as: "issues.workflow"
+        }
+      },
+      {
+        $unwind: {
+          path: "$issues.workflow",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $group: {
+          _id: "$_id",
+          issues: { $push: "$issues"},
+          project: { $first: "$project" }
+        }
+      },
+      {
+        $project:  {
+          project: "$project",
+          count: {
+            toDo: {
+              $size: {
+                $filter: {
+                  input: "$issues",
+                  as: "issue",
+                  cond: { $eq: ["$$issue.workflow.type", "TODO"] }
+                }
+              }
+            },
+            inProgress: {
+              $size: {
+                $filter: {
+                  input: "$issues",
+                  as: "issue",
+                  cond: { $eq: ["$$issue.workflow.type", "INPROGRESS"] }
+                }
+              }
+            },
+            done: {
+              $size: {
+                $filter: {
+                  input: "$issues",
+                  as: "issue",
+                  cond: { $eq: ["$$issue.workflow.type", "DONE"] }
+                }
+              }
+            },
+          }
+        }
+      }
+    ])
+    return [results, {}];
+  }
 }
 
 export default IssueRepository;

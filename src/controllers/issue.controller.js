@@ -17,6 +17,7 @@ class IssueController {
         try {
             //handler login
             const user = await userRepository.getUserInfo(userId)
+            console.log(user)
             if(!user) throw new Error("Your account can't create issue.")
             const workflow = await workflowRepository.getWorkflow({name: 'TO DO'})
             data = {
