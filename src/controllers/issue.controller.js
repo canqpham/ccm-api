@@ -51,7 +51,7 @@ class IssueController {
       try {
         const paramsQuery = {
           query: params.query,
-          populate: params.populate || '',
+          populate: params.populate || 'sprint workflow',
           pageSize: params.pageSize || 5,
           pageNumber: params.pageNumber || 1,
         }
