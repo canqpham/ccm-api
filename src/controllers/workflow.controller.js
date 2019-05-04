@@ -59,8 +59,10 @@ class WorkflowController {
 
   getListWorkflow = async (req, res, next) => {
     try {
-      const project = req.query.project
-      const workflow = await workflowRepository.getListByParams({project})
+      const params = req.query
+      const queryParams = JSON.parse(params.query)
+
+      const workflow = await workflowRepository.getListByParams(queryParams)
       if(!workflow) throw new Error("Cannot get list workflow")
 
       return res.json(new RequestResponse({

@@ -19,6 +19,11 @@ class IssueTypeRepository {
       return issueType
   }
 
+  getListByParams = async (data) => {
+    const issueTypes = await IssueType.find(data)
+    return issueTypes
+  }
+
   getListAll = async () => {
       const issueTypes = await IssueType.find()
       return issueTypes

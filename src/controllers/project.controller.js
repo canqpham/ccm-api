@@ -3,17 +3,29 @@ import ProjectMemberRepository from '../repositories/projectMember.repository'
 import GroupRepository from '../repositories/group.repository'
 import WorkflowRepository from '../repositories/workflow.repository'
 import IssueTypeRepository from '../repositories/issueType.repository'
+import UserRepository from '../repositories/user.repository';
+import IssueRepository from '../repositories/issue.repository';
+import IssueController from '../controllers/issue.controller';
+import SrpintRepository from '../repositories/sprint.repository';
+
 import { RequestResponse } from '../utils/common'
+
 import emailHelper from '../utils/emailHelper'
 import _ from 'lodash'
-import UserRepository from '../repositories/user.repository';
 import mongoose from 'mongoose'
+import SprintRepository from '../repositories/sprint.repository';
+import VersionRepository from '../repositories/version.repository';
 
 const projectRepository = new ProjectRepository();
 const projectMemberRepository = new ProjectMemberRepository()
 const userRepository = new UserRepository()
 const workflowRepository = new WorkflowRepository()
 const issueTypeRepository = new IssueTypeRepository()
+const issueRepository = new IssueRepository()
+const issueController = new IssueController()
+const sprintRepository = new SprintRepository()
+const versionRepository = new VersionRepository()
+const groupRepository = new GroupRepository()
 
 // const ObjectId = mongoose.Types
 class ProjectController {
@@ -186,7 +198,7 @@ class ProjectController {
       if(temp) throw new Error ("Member is exist.")
       let projectMember = await projectMemberRepository.create(data)
       let result = await projectMemberRepository.getByParams({_id: projectMember._id})
-      console.log(result)
+      // console.log(result)
       emailHelper.sendEmailStandard({to: result.member.email, userName: result.member.displayName, subject: 'CCM | Notification to add to Project' }, `<h2>Hi ${result.member.fullName}, You are added to project ${result.project.name} </h2>`)
       if(!projectMember) throw new Error("Can't add member to project")
       return res.json(new RequestResponse({
@@ -208,11 +220,30 @@ class ProjectController {
       const id = req.params.id
       // console.log(userId)
       const project = await projectRepository.getProjectByParams({_id: id, lead: userId})
-      console.log(project)
+      // console.log(project)
       if(!project) throw new Error("User does not have permission to remove project")
 
       const projectMember = await projectMemberRepository.getListUserByProjectId(id)
-      await projectRepository.remove(id) && projectMember.map( item =>  projectMemberRepository.remove(item._id))
+      projectRepository.remove(id) && projectMember.map( item =>  projectMemberRepository.remove(item._id))
+
+      const projectGroups = await groupRepository.getListByParams({project: id})
+      projectGroups.map(item => groupRepository.remove(item._id))
+
+      const projectWorkflows = await workflowRepository.getListByParams({project: id})
+      projectWorkflows.map(item => workflowRepository.remove(item._id))
+
+      const projectIssueTypes = await issueTypeRepository.getListByParams({project: id})
+      projectIssueTypes.map(item => issueTypeRepository.remove(item._id))
+
+      // const projectIssues = await issueRepository.getListByParams({project: id}) // 
+      // projectIssues.map(item => issueRepository.remove(item._id))
+
+      const projectSprints = await sprintRepository.getLstByParams({project: id})
+      projectSprints.map(item => sprintRepository.remove(item._id))
+
+      const projectVersions = await versionRepository.getListVersionByParams({project: id})
+      projectVersions.map(item => versionRepository.remove(item._id))
+
       return res.json(new RequestResponse({
         statusCode: 200
       }))

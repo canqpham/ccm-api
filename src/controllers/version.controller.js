@@ -27,8 +27,9 @@ class VersionController {
   getListByProject = async (req, res, next) => {
     let userId= req.userId
     try {
-      const project = req.query.project
-      const versions = await versionRepository.getListVersionByParams({project})
+      const params = req.query
+      const queryParams = JSON.parse(params.query)
+      const versions = await versionRepository.getListVersionByParams(queryParams)
       if(!versions) throw new Error("Can't get list version")
       return res.json(new RequestResponse({
         statusCode: 200,

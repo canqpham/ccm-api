@@ -43,6 +43,21 @@ class IssueRepository {
       },
       {
         $lookup: {
+          from: 'workflow',
+          localField: "workflow",
+          foreignField: "_id",
+          as: 'workflow'
+        },
+      },
+      {
+        $project: {
+          workflow: {
+            $arrayElemAt: [ '$workflow', 0 ]
+          }
+        }
+      },
+      {
+        $lookup: {
           from: "assignIssues",
           pipeline: [
             { $match: { issue: mongoose.Types.ObjectId(id) } },
@@ -101,6 +116,7 @@ class IssueRepository {
         }
       }
     ]);
+    // let result  = issue.populate('workflow')
     return issue;
   };
 

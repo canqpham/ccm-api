@@ -14,6 +14,11 @@ class GroupRepository {
         return false;
     }
 
+    getListByParams = async (data) => {
+        const groups = await Group.find(data)
+        return groups;
+    }
+
     getListAll = async () => {
         const groups = await Group.find()
         return groups;
@@ -22,6 +27,11 @@ class GroupRepository {
     update = async (id, data) => {
         await Group.findByIdAndUpdate(id, data)
         const group = await Group.findById(id)
+        return group
+    }
+
+    remove = async id => {
+        const group = await Group.findByIdAndRemove(id)
         return group
     }
 }

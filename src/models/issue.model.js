@@ -25,6 +25,7 @@ const IssueSchema = new Schema(
     actualTime: {type: String},
     vote: {type: Number},
     version: {type: ObjectId, ref: 'versions'},
+    sequence: {type: Number} // 1, 2, 3, 4, ...
   },
   {
     collection: 'issues',

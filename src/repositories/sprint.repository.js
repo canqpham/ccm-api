@@ -126,7 +126,12 @@ class SprintRepository {
     return sprints
   }
 
-  getListSprintByParams = async (params) => {
+  getLstByParams = async (data) => {
+    const sprints = await Sprint.find(data)
+    return sprints
+  }
+
+  getListSprintNotCompleted = async (params) => {
     const sprints = await Sprint.aggregate([
       {
         $match: {

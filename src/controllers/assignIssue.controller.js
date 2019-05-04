@@ -34,7 +34,7 @@ class AssignIssueController {
 
       const temp = await assignIssueRepository.getAssignIssue({_id: assignIssue._id }) //ng dc assign va issue
       const user = await userRepository.getUserInfo(userId)
-      console.log(temp)
+      // console.log(temp)
 
       const paramsActivity = {
         issue: data.issue,
@@ -67,7 +67,7 @@ class AssignIssueController {
       const userId = req.userId
       const temp = await assignIssueRepository.getAssignIssue({_id: id})
       const user = await userRepository.getUserInfo(userId)
-      console.log(temp)
+      // console.log(temp)
 
       const paramsActivity = {
         issue: temp.issue._id,
