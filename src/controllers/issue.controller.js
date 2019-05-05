@@ -49,9 +49,13 @@ class IssueController {
       const userId = req.userId
       // console.log(JSON.parse(params.query))
       try {
+        const populate = JSON.stringify({
+          path: 'sprint workflow',
+          select: 'type'
+        })
         const paramsQuery = {
           query: params.query,
-          populate: params.populate || 'sprint workflow',
+          populate: params.populate || populate,
           pageSize: params.pageSize || 5,
           pageNumber: params.pageNumber || 1,
         }

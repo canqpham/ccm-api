@@ -154,7 +154,10 @@ class IssueRepository {
         }
       },
       {
-        $unwind: "$issues"
+        $unwind: {
+          path: "$issues",
+          preserveNullAndEmptyArrays: true
+        }
       },
       {
         $lookup: {
