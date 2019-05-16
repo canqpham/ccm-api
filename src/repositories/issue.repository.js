@@ -52,7 +52,7 @@ class IssueRepository {
         },
       },
       {
-        $project: {
+        $addFields: { 
           workflow: {
             $arrayElemAt: [ '$workflow', 0 ]
           }
