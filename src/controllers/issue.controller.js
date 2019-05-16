@@ -54,7 +54,8 @@ class IssueController {
           select: 'type'
         })
         const paramsQuery = {
-          query: params.query,
+          ...params,
+          query: params.query || '',
           populate: params.populate || populate,
           pageSize: params.pageSize || 5,
           pageNumber: params.pageNumber || 1,
