@@ -30,11 +30,22 @@ class IssueTypeController {
     }
 
     getListAll = async (req, res, next) => {
+        const params = req.query
         try {
-            let issueTypes = await issueTypeRepository.getListAll()
+            const paramsQuery = {
+                ...params,
+                query: params.query || '',
+                populate: params.populate || '',
+                pageSize: params.pageSize || 5,
+                pageNumber: params.pageNumber || 1,
+              }
+            let [issueTypes, count] = await issueTypeRepository.getListByParams(paramsQuery)
             if(!issueTypes) throw new Error("Can't get list issue types")
             return res.json( new RequestResponse({
                 data: issueTypes,
+                meta: {
+                    total: count,
+                  },
                 statusCode: 200
             }))
         } catch (error) {

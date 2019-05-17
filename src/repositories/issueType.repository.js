@@ -1,5 +1,5 @@
 import IssueType from '../models/issueType.model';
-
+import helper from '../utils/helper';
 class IssueTypeRepository {
   constructor() { }
 
@@ -19,9 +19,9 @@ class IssueTypeRepository {
       return issueType
   }
 
-  getListByParams = async (data) => {
-    const issueTypes = await IssueType.find(data)
-    return issueTypes
+  getListByParams = async (params) => {
+    const [result, count] = await helper.getListItem(IssueType, params)
+    return [result, count]
   }
 
   getListAll = async () => {
