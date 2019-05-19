@@ -8,6 +8,8 @@ import http from 'http';
 // import { StartSocket } from '../socket/index';
 
 import indexRouter from '../routes';
+// import mediaRoute from '../routes/media.route';
+
 import { ServerConfig } from '../../configs/index';
 // Config express
 var app = express();
@@ -22,7 +24,8 @@ app.use(cors());
 require('./passport.init');
 
 //Config public folder
-app.use(express.static(path.join(__dirname, 'publics')));
+app.use(express.static(path.join(__dirname, '/public')));
+app.get("/api/media/", express.static(path.join(__dirname, "/media")));
 
 const server = http.createServer(app);
 
@@ -42,6 +45,7 @@ const server = http.createServer(app);
 // });
 
 //Config router
+// app.use('/media', mediaRoute);
 app.use('/api', indexRouter);
 
 const initExpress = async () => {

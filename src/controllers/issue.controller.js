@@ -2,6 +2,7 @@ import IssueRepository from '../repositories/issue.repository'
 import AssignIssueRepository from '../repositories/assignIssue.repository'
 import WorkflowRepository from '../repositories/workflow.repository'
 import UserRepository from '../repositories/user.repository'
+import ProjectRepository from '../repositories/project.repository'
 import { RequestResponse } from '../utils/common'
 
 import _ from 'lodash'
@@ -10,6 +11,7 @@ const issueRepository = new IssueRepository()
 const workflowRepository = new WorkflowRepository()
 const userRepository = new UserRepository()
 const assignIssueRepository = new AssignIssueRepository()
+const projectRepository = new ProjectRepository()
 class IssueController {
     create = async (req, res, next) => {
         let data = req.body
@@ -17,13 +19,23 @@ class IssueController {
         try {
             //handler login
             const user = await userRepository.getUserInfo(userId)
-            console.log(user)
+            const project = await projectRepository.getProjectById(data.project)
+            if(!project) throw new Error("Project is not exist or your project id is invalid.")
+            const listIssueCreated = await issueRepository.getListIssueByParams({project: data.project})
+            let issueKey = '';
+            if(!listIssueCreated || listIssueCreated == []) {
+              issueKey = project.key + '-1'
+            } else {
+              const temp = listIssueCreated[listIssueCreated.length].issueKey
+              issueKey = temp ? project.key + '-' + _.split(temp, '-')[_.split(temp, '-').length - 1] :  project.key + '-' + (listIssueCreated.length + 1)
+            }
             if(!user) throw new Error("Your account can't create issue.")
             const workflow = await workflowRepository.getWorkflow({name: 'TO DO'})
             data = {
                 ...data,
                 creator: user.fullName,
-                workflow: workflow._id
+                workflow: workflow._id,
+                issueKey
             }
             let issue = await issueRepository.create(data)
             if (!issue) throw new Error("Can't create issue.")
