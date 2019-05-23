@@ -28,6 +28,11 @@ class UserRepository {
     let user = await User.findById(_id)
     return user
   }
+
+  getListByParams = async data => {
+    let users = await User.find(data)
+    return users
+  }
 }
 
 export default UserRepository;
