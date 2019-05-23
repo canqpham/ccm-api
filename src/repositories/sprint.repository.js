@@ -126,7 +126,7 @@ class SprintRepository {
     return sprints
   }
 
-  getLstByParams = async (data) => {
+  getListSprintByParams = async (data) => {
     const sprints = await Sprint.find(data)
     return sprints
   }
