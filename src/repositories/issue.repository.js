@@ -48,14 +48,40 @@ class IssueRepository {
           from: 'workflow',
           localField: "workflow",
           foreignField: "_id",
+          // pipeline: [
+          //   // { $match: { _id: 'workflow' } },
+          //   { $project: { name: "$name" } }
+          // ],
           as: 'workflow'
+        },
+      },
+      {
+        $lookup: {
+          from: 'issueTypes',
+          localField: "issueType",
+          foreignField: "_id",
+          as: 'issueType'
+        },
+      },
+      {
+        $lookup: {
+          from: 'sprints',
+          localField: "sprint",
+          foreignField: "_id",
+          as: 'sprint'
         },
       },
       {
         $addFields: { 
           workflow: {
             $arrayElemAt: [ '$workflow', 0 ]
-          }
+          },
+          issueType: {
+            $arrayElemAt: [ '$issueType', 0 ]
+          },
+          sprint: {
+            $arrayElemAt: [ '$sprint', 0 ]
+          },
         }
       },
       {
@@ -119,7 +145,7 @@ class IssueRepository {
       }
     ]);
     // let result  = issue.populate('workflow')
-    return issue;
+    return issue[0];
   };
 
   remove = async id => {
