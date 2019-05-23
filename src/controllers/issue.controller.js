@@ -26,8 +26,8 @@ class IssueController {
             if(!listIssueCreated || listIssueCreated == []) {
               issueKey = project.key + '-1'
             } else {
-              const temp = listIssueCreated[listIssueCreated.length].issueKey
-              issueKey = temp ? project.key + '-' + _.split(temp, '-')[_.split(temp, '-').length - 1] :  project.key + '-' + (listIssueCreated.length + 1)
+              const temp = listIssueCreated[listIssueCreated.length - 1].issueKey
+              issueKey = temp ? project.key + ' - ' + (Number(_.split(temp, '-')[_.split(temp, '-').length - 1]) + 1) :  project.key + ' - ' + (listIssueCreated.length + 1)
             }
             if(!user) throw new Error("Your account can't create issue.")
             const workflow = await workflowRepository.getWorkflow({name: 'TO DO'})
@@ -69,7 +69,7 @@ class IssueController {
           ...params,
           query: params.query || '',
           populate: params.populate || populate,
-          pageSize: params.pageSize || 5,
+          pageSize: params.pageSize,
           pageNumber: params.pageNumber || 1,
         }
         let [issues, count] = await issueRepository.getListByParams(paramsQuery)

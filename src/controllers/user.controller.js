@@ -1,7 +1,9 @@
 import UserRepository from '../repositories/user.repository';
+import ProjectMemberRepository from '../repositories/projectMember.repository'
 import { RequestResponse } from '../utils/common';
 
 const userRepository = new UserRepository();
+const projectMemberRepository = new ProjectMemberRepository();
 class UserController {
     register = async (req, res, next) => {
         let data = req.body;
@@ -32,6 +34,26 @@ class UserController {
         if(!user) throw new Error("User not found !")
         return res.json( new RequestResponse({
           data: user,
+          statusCode: 200
+        }))
+      } catch (error) {
+        return res.json( new RequestResponse({
+          success: false,
+          statusCode: 400,
+          error
+        }))
+      }
+    }
+
+    getListUserByProject = async (req, res, next) => {
+      let id = req.userId
+      const { query } = req.query
+      try {
+        const project = JSON.parse(query).project
+        let users = await projectMemberRepository.getListByParams({project})
+        if(!users) throw new Error("User not found !")
+        return res.json( new RequestResponse({
+          data: users,
           statusCode: 200
         }))
       } catch (error) {

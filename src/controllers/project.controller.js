@@ -165,7 +165,7 @@ class ProjectController {
         pageNumber: params.pageNumber || 1,
         sort: JSON.stringify({ updatedAt: -1 })
       };
-      let [projects, count] = await issueRepository.getListProjectDashboard(
+      let [projects, count] = await projectMemberRepository.getListProjectDashboard(
         userId
       );
       if (!projects || count == 0) throw new Error("Can't get projects");

@@ -1,5 +1,5 @@
 import Workflow from '../models/workflow.model';
-
+import mongoose from 'mongoose';
 class WorkflowRepository {
   constructor() { }
 
@@ -22,6 +22,26 @@ class WorkflowRepository {
 
   getListByParams = async (data) => {
     const workflows = await Workflow.find(data)
+    return workflows
+  }
+
+  getListByProject = async (id) => {
+    const workflows = await Workflow.aggregate([
+      {
+        $match: {
+          project: mongoose.Types.ObjectId(id)
+        }
+      },
+      {
+        $lookup: {
+          from: "issues",
+          localField: "_id",
+          foreignField: "workflow",
+          as: "issues"
+        }
+      },
+      
+    ])
     return workflows
   }
 
