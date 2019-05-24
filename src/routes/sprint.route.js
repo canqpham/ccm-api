@@ -12,15 +12,16 @@ import IssueController from '../controllers/issue.controller';
 const sprintController = new SprintController();
 
 // Route and method: GET POST PUT DELETE
-router.post('/', Authenticate(),  sprintController.create);
-router.get('/', Authenticate(),  sprintController.getListAll);
-router.put('/', Authenticate(),  sprintController.update);
+
+router.get('/board', Authenticate(),  sprintController.getBoard);
 router.post('/addIssue', Authenticate(),  sprintController.addIssueToSprint);
 router.get('/notComplete', Authenticate(),  sprintController.getListSprintNotComplete);
 router.post('/start', Authenticate(), sprintController.startSprint)
 router.post('/complete', Authenticate(), sprintController.completeSprint)
 router.get('/active', Authenticate(), sprintController.getSprintActive)
 router.get('/:id', Authenticate(),  sprintController.getSprint);
-
+router.post('/', Authenticate(),  sprintController.create);
+router.get('/', Authenticate(),  sprintController.getListAll);
+router.put('/', Authenticate(),  sprintController.update);
 
 module.exports = router;

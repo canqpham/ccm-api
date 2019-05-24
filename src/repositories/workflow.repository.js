@@ -1,45 +1,45 @@
-import Workflow from '../models/workflow.model';
-import mongoose from 'mongoose';
+import Workflow from "../models/workflow.model";
+import mongoose from "mongoose";
 class WorkflowRepository {
-  constructor() { }
+  constructor() {}
 
-  create = async (data) => {
+  create = async data => {
     const workflow = await Workflow.create(data);
     return workflow;
-  }
+  };
 
-  getWorkflow = async (data) => {
+  getWorkflow = async data => {
     // console.log('Query', data)
-    const workflow = await Workflow.findOne(data)
-    return workflow
-  }
+    const workflow = await Workflow.findOne(data);
+    return workflow;
+  };
 
   update = async (id, data) => {
-      await Workflow.findByIdAndUpdate(id, data)
-      const workflow = await Workflow.findById(id)
-      return workflow
-  }
+    await Workflow.findByIdAndUpdate(id, data);
+    const workflow = await Workflow.findById(id);
+    return workflow;
+  };
 
-  getListByParams = async (data) => {
-    const workflows = await Workflow.find(data)
-    return workflows
-  }
+  getListByParams = async data => {
+    const workflows = await Workflow.find(data);
+    return workflows;
+  };
 
-  getListByProject = async (id) => {
+  getListByProject = async id => {
     const workflows = await Workflow.aggregate([
       {
         $match: {
           project: mongoose.Types.ObjectId(id)
         }
       },
-      {
-        $lookup: {
-          from: "issues",
-          localField: "_id",
-          foreignField: "workflow",
-          as: "issues"
-        }
-      },
+      // {
+      //   $lookup: {
+      //     from: "issues",
+      //     localField: "_id",
+      //     foreignField: "workflow",
+      //     as: "issues"
+      //   }
+      // },
       // {
       //   $unwind: {
       //     path: "$issues",
@@ -54,23 +54,37 @@ class WorkflowRepository {
       //     as: "sprint"
       //   }
       // },
+
       // {
-      //   $unwind: "$sprint"
+      //   $unwind: {
+      //     path: "$sprint",
+      //     preserveNullAndEmptyArrays: true
+      //   }
+      // },
+
+      // {
+      //   $match: {
+      //     "sprint.active": true
+      //   }
       // }
-      
-    ])
-    return workflows
-  }
+      // {
+      //   $group: {
+      //     _id: "$_id",
+      //   }
+      // }
+    ]);
+    return workflows;
+  };
 
   getListAll = async () => {
-      const workflows = await Workflow.find()
-      return workflows
-  }
+    const workflows = await Workflow.find();
+    return workflows;
+  };
 
-  remove = async (id) => {
-    const workflow = await Workflow.findByIdAndRemove(id)
-    return workflow
-  }
+  remove = async id => {
+    const workflow = await Workflow.findByIdAndRemove(id);
+    return workflow;
+  };
 }
 
 export default WorkflowRepository;

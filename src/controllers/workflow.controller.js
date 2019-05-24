@@ -2,9 +2,11 @@ import WorkflowRepository from '../repositories/workflow.repository'
 import ProjectRepository from '../repositories/project.repository'
 import {RequestResponse} from '../utils/common'
 import IssueRepository from '../repositories/issue.repository';
+import SprintRepository from '../repositories/sprint.repository';
 const workflowRepository = new WorkflowRepository()
 const issueRepository = new IssueRepository()
 const projectRepository = new ProjectRepository()
+const sprintRepository = new SprintRepository()
 
 class WorkflowController {
 
@@ -57,6 +59,7 @@ class WorkflowController {
     }
   }
 
+  
   getListWorkflow = async (req, res, next) => {
     try {
       const params = req.query

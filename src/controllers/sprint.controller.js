@@ -278,6 +278,27 @@ class SprintController {
         error
       })
     }
+  };
+
+  getBoard = async (req, res, next) => {
+    try {
+      const params = req.query
+      const queryParams = JSON.parse(params.query)
+      // console.log(req)
+      const list = await sprintRepository.getListWorkflowByProject(queryParams.project)
+      if(!list) throw new Error("Cannot get list workflow")
+
+      return res.json(new RequestResponse({
+        statusCode: 200,
+        data: list
+      }))
+    } catch (error) {
+      return res.json(new RequestResponse({
+        statusCode: 400,
+        success: false,
+        error
+      }))
+    }
   }
 }
 
