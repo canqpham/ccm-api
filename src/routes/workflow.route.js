@@ -7,8 +7,8 @@ import WorkflowController from '../controllers/workflow.controller';
 // Controller
 const workflowController = new WorkflowController();
 
-router.post('/list', Authenticate(),  workflowController.getWorkflow);
-router.get('/', Authenticate(), workflowController.getListWorkflow)
+router.post('/', Authenticate(),  workflowController.create);
+router.get('/list', Authenticate(), workflowController.getListWorkflow)
 // router.post('/', userController.register);
 
 module.exports = router;
