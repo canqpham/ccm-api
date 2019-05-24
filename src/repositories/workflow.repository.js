@@ -40,23 +40,23 @@ class WorkflowRepository {
           as: "issues"
         }
       },
-      {
-        $unwind: {
-          path: "$issues",
-          preserveNullAndEmptyArrays: true
-        }
-      },
-      {
-        $lookup: {
-          from: "sprints",
-          localField: "issues.sprint",
-          foreignField: "_id",
-          as: "sprint"
-        }
-      },
-      {
-        $unwind: "$sprint"
-      }
+      // {
+      //   $unwind: {
+      //     path: "$issues",
+      //     preserveNullAndEmptyArrays: true
+      //   }
+      // },
+      // {
+      //   $lookup: {
+      //     from: "sprints",
+      //     localField: "issues.sprint",
+      //     foreignField: "_id",
+      //     as: "sprint"
+      //   }
+      // },
+      // {
+      //   $unwind: "$sprint"
+      // }
       
     ])
     return workflows
