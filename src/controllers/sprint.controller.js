@@ -143,7 +143,7 @@ class SprintController {
       const queryParams = JSON.parse(params.query)
       // console.log(queryParams)
       
-      let sprints = await sprintRepository.getListSprintNotCompleted({...queryParams, completed: false, active: false});
+      let sprints = await sprintRepository.getListSprintNotCompleted({...queryParams, completed: false});
       // console.log(sprints)
       if (!sprints) throw new Error("Can't get list sprints");
 

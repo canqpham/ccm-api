@@ -225,7 +225,7 @@ class SprintRepository {
         $match: {
           project: mongoose.Types.ObjectId(params.project),
           completed: params.completed,
-          active: params.active
+          // active: params.active
         }
       }
     ]);
