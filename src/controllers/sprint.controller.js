@@ -143,7 +143,7 @@ class SprintController {
       const queryParams = JSON.parse(params.query)
       // console.log(queryParams)
       
-      let sprints = await sprintRepository.getListSprintNotCompleted(queryParams);
+      let sprints = await sprintRepository.getListSprintNotCompleted({...queryParams, completed: false, active: false});
       // console.log(sprints)
       if (!sprints) throw new Error("Can't get list sprints");
 
@@ -190,7 +190,7 @@ class SprintController {
   };
 
   startSprint = async (req, res, next) => {
-    const { project, active } = req.body;
+    const { project } = req.body;
     // const data = req.body
     const sprintId = req.body.sprint;
     const userId = req.userId;
@@ -200,19 +200,19 @@ class SprintController {
       const isExist = await sprints.find(item => item.active == true);
       if (isExist) throw new Error("Have been sprints started");
 
-      const issues = await issueRepository.getListIssueByParams({
-        project,
-        sprint: sprintId
-      });
-      const workflowTodo = await workflowRepository.getWorkflow({
-        name: 'TO DO'
-      });
+      // const issues = await issueRepository.getListIssueByParams({
+      //   project,
+      //   sprint: sprintId
+      // });
+      // const workflowTodo = await workflowRepository.getWorkflow({
+      //   name: 'TO DO'
+      // });
       
-      if(!workflowTodo) throw new Error("Can't add all issues to 'TO DO' board")
-      issues.map(async issue => {
-        await issueRepository.update(issue._id, { workflow: workflowTodo._id });
-      });
-      const sprint = await sprintRepository.update(sprintId, { active });
+      // if(!workflowTodo) throw new Error("Can't add all issues to 'TO DO' board")
+      // issues.map(async issue => {
+      //   await issueRepository.update(issue._id, { workflow: workflowTodo._id });
+      // });
+      const sprint = await sprintRepository.update(sprintId, { active: true });
       if (!sprint) throw new Error("Can't start sprint");
 
       return res.json(
