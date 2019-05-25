@@ -136,7 +136,7 @@ class SprintRepository {
           issues: { $push: "$issues" },
           workflow: { $first: "$workflow" }
         }
-      },
+      }
       // {
       //   $redact: {
       //     $cond: {
@@ -224,10 +224,110 @@ class SprintRepository {
       {
         $match: {
           project: mongoose.Types.ObjectId(params.project),
-          completed: params.completed,
+          completed: params.completed
           // active: params.active
         }
-      }
+      },
+      {
+        $lookup: {
+          from: "issues",
+          localField: "_id",
+          foreignField: "sprint",
+          as: "issues"
+        }
+      },
+      {
+        $unwind: {
+          path: "$issues",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: "workflow",
+          localField: "issues.workflow",
+          foreignField: "_id",
+          as: "issues.workflow"
+        }
+      },
+      {
+        $unwind: {
+          path: "$issues.workflow",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $group: {
+          _id: "$_id",
+          issues: { $push: "$issues" },
+          active: { $first: "$active" },
+          completed: { $first: "$completed" },
+          createdAt: { $first: "$createdAt" },
+          endDate: { $first: "$endDate" },
+          goal: { $first: "$goal" },
+          name: { $first: "$name" },
+          project: { $first: "$project" },
+          startDate: { $first: "$startDate" },
+          updatedAt: { $first: "$updatedAt" }
+        }
+      },
+      //  {
+      //   $addFields: {
+      //     issueTotal: {
+      //       $size: "$issues"
+      //     }
+      //   }
+      // },
+      {
+        $project: {
+          active: "$active",
+          issueTotal: "$issueTotal",
+          completed: "$completed",
+          createdAt: "$createdAt",
+          endDate: "$endDate",
+          goal: "$goal",
+          name: "$name",
+          project: "$project",
+          startDate: "$startDate",
+          updatedAt: "$updatedAt",
+          count: {
+            toDo: {
+              $size: {
+                $filter: {
+                  input: "$issues",
+                  as: "issue",
+                  cond: { $eq: ["$$issue.workflow.type", "TODO"] }
+                }
+              }
+            },
+            inProgress: {
+              $size: {
+                $filter: {
+                  input: "$issues",
+                  as: "issue",
+                  cond: { $eq: ["$$issue.workflow.type", "INPROGRESS"] }
+                }
+              }
+            },
+            done: {
+              $size: {
+                $filter: {
+                  input: "$issues",
+                  as: "issue",
+                  cond: { $eq: ["$$issue.workflow.type", "DONE"] }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        $sort: {
+          sequence: -1,
+          createdAt: 1
+        }
+      },
+     
     ]);
     // console.log(sprints)
     return sprints;
