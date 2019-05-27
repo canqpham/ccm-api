@@ -19,7 +19,7 @@ const IssueSchema = new Schema(
     workflow: {type: ObjectId, ref: 'workflow'}, // to do, in progress, test, done
     attachs: [{type: String}], // Save url of file
     subTaskOfIssue: {type: ObjectId, ref: 'issues'}, // a subTask belong only issue
-    label: {type: ObjectId, ref: 'labels'},
+    label: [{type: String}],
     resloved: {type: Date},
     estimateTime: {type: String},
     actualTime: {type: String},

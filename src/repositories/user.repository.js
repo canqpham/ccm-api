@@ -24,8 +24,8 @@ class UserRepository {
     return user;
   }
 
-  getUserInfo = async (_id) => {
-    let user = await User.findById(_id)
+  getUserInfo = async (id) => {
+    let user = await User.findById(id)
     return user
   }
 
