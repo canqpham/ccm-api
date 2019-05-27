@@ -30,7 +30,7 @@ class IssueController {
               issueKey = project.key + '-1'
             } else {
               const temp = listIssueCreated[listIssueCreated.length - 1].issueKey
-              issueKey = temp ? project.key + ' - ' + (Number(_.split(temp, '-')[_.split(temp, '-').length - 1]) + 1) :  project.key + ' - ' + (listIssueCreated.length + 1)
+              issueKey = temp ? project.key + '-' + (Number(_.split(temp, '-')[_.split(temp, '-').length - 1]) + 1) :  project.key + '-' + (listIssueCreated.length + 1)
             }
             if(!user) throw new Error("Your account can't create issue.")
             const workflow = await workflowRepository.getWorkflow({name: 'TO DO'})
@@ -106,8 +106,8 @@ class IssueController {
         try {
           let issue = await issueRepository.getIssueInfo(id)
           if(!issue) throw new Error('Issue is not found')
-          let assignIssue = await assignIssueRepository.getListAssignByIssue(id)
-          let assignees = await assignIssue.map(item => _.omit(item.assignee, ['password']))
+          // let assignIssue = await assignIssueRepository.getListAssignByIssue(id)
+          // let assignees = await assignIssue.map(item => _.omit(item.assignee, ['password']))
           // const result = await _.assign({...issue._doc}, {assignees})
           // issue = {
           //   ...issue.toObject(),

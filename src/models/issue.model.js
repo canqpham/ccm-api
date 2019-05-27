@@ -6,7 +6,7 @@ const { ObjectId } = Schema.Types;
 const IssueSchema = new Schema(
   {
     project: {type: ObjectId, ref: 'projects'},
-    assigneeAccount: {type: ObjectId, ref: 'users'},
+    assignee: [{type: ObjectId, ref: 'users'}],
     issueKey: {type: String, required: true},
     creator: {type: String, required: true}, // creator's name
     reporter: {type: ObjectId, ref: 'users'},
