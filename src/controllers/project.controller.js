@@ -7,6 +7,7 @@ import UserRepository from "../repositories/user.repository";
 import IssueRepository from "../repositories/issue.repository";
 import IssueController from "../controllers/issue.controller";
 import SrpintRepository from "../repositories/sprint.repository";
+import PriorityRepository from "../repositories/priority.repository"
 
 import { RequestResponse } from "../utils/common";
 
@@ -22,7 +23,7 @@ const userRepository = new UserRepository();
 const workflowRepository = new WorkflowRepository();
 const issueTypeRepository = new IssueTypeRepository();
 const issueRepository = new IssueRepository();
-const issueController = new IssueController();
+const priorityRepository = new PriorityRepository();
 const sprintRepository = new SprintRepository();
 const versionRepository = new VersionRepository();
 const groupRepository = new GroupRepository();
@@ -130,6 +131,41 @@ class ProjectController {
         }
       })
 
+      const priority = [
+        {
+          project: project._id,
+          name: "Highest", // very high, high, medium, low
+          level: 1, // 0: very high, 1: high, 2: medium, 3: low 
+          iconUrl: '/media/highest.svg'
+        },
+        {
+          project: project._id,
+          name: "High", // very high, high, medium, low
+          level: 2, // 0: very high, 1: high, 2: medium, 3: low 
+          iconUrl: '/media/high.svg'
+        },
+        {
+          project: project._id,
+          name: "Medium", // very high, high, medium, low
+          level: 3, // 0: very high, 1: high, 2: medium, 3: low 
+          iconUrl: '/media/medium.svg'
+        },
+        {
+          project: project._id,
+          name: "Low", // very high, high, medium, low
+          level: 4, // 0: very high, 1: high, 2: medium, 3: low 
+          iconUrl: '/media/low.svg'
+        },
+        {
+          project: project._id,
+          name: "Lowest", // very high, high, medium, low
+          level: 5, // 0: very high, 1: high, 2: medium, 3: low 
+          iconUrl: '/media/lowest.svg'
+        },
+      ]
+
+      priority.map(item => priorityRepository.create(item))
+
       if (!project) throw new Error("Can't create project");
 
       //Initialize token
@@ -168,7 +204,7 @@ class ProjectController {
       let [projects, count] = await projectMemberRepository.getListProjectDashboard(
         userId
       );
-      if (!projects || count == 0) throw new Error("Can't get projects");
+      if (!projects) throw new Error("Can't get projects");
 
       return res.json(
         new RequestResponse({

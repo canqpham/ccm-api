@@ -5,6 +5,7 @@ import UserRepository from '../repositories/user.repository'
 import ProjectRepository from '../repositories/project.repository'
 import { RequestResponse } from '../utils/common'
 
+import helper from '../utils/helper'
 import _ from 'lodash'
 
 const issueRepository = new IssueRepository()
@@ -12,6 +13,7 @@ const workflowRepository = new WorkflowRepository()
 const userRepository = new UserRepository()
 const assignIssueRepository = new AssignIssueRepository()
 const projectRepository = new ProjectRepository()
+
 class IssueController {
     create = async (req, res, next) => {
         let data = req.body
@@ -23,7 +25,8 @@ class IssueController {
             if(!project) throw new Error("Project is not exist or your project id is invalid.")
             const listIssueCreated = await issueRepository.getListIssueByParams({project: data.project})
             let issueKey = '';
-            if(!listIssueCreated || listIssueCreated == []) {
+            console.log("list: ", listIssueCreated)
+            if(!listIssueCreated || _.isEmpty(listIssueCreated)) {
               issueKey = project.key + '-1'
             } else {
               const temp = listIssueCreated[listIssueCreated.length - 1].issueKey
@@ -39,7 +42,7 @@ class IssueController {
             }
             let issue = await issueRepository.create(data)
             if (!issue) throw new Error("Can't create issue.")
-      
+            helper.updateProject(data.project)
             //Initialize token
             // let token = await this._signToken(user)
             return res.json(new RequestResponse({
@@ -62,8 +65,8 @@ class IssueController {
       // console.log(JSON.parse(params.query))
       try {
         const populate = JSON.stringify({
-          path: 'sprint workflow issueType',
-          select: 'type iconUrl'
+          path: 'sprint workflow issueType priority',
+          select: 'type iconUrl name'
         })
         const paramsQuery = {
           ...params,
@@ -129,8 +132,9 @@ class IssueController {
       const userId = req.userId
       try {
         let issue = await issueRepository.update(id, data)
-        console.log(issue)
+        // console.log(issue)
         if(!issue) throw new Error("Can't update issue")
+        helper.updateProject(issue.project)
         return res.json(new RequestResponse({
           statusCode: 200,
           data: issue
@@ -149,6 +153,7 @@ class IssueController {
       try {
         let issue = issueRepository.remove(id)
         if(!issue) throw new Error("Can't remove issue")
+        helper.updateProject(issue.project)
         return res.json(new RequestResponse({
           statusCode: 200,
         }))

@@ -3,6 +3,13 @@ const {assoc, map, prop, dissoc, filter, sum, equals, defaultTo, head, intersper
   join, type, omit, clone, inc, pick, sortWith, descend, ascend} = require('ramda')
 import _ from 'lodash'
 
+import ProjectMemberRepository from '../repositories/projectMember.repository'
+
+function updateProject(id) {
+  const projectMemberRepository = new ProjectMemberRepository
+  projectMemberRepository.update(id, {})
+}
+
 async function findByKey(model, data) {
   const result = await model.findOne(data);
   return result;
@@ -134,5 +141,6 @@ export const error501 = () => {
 
 export default {
   findByKey,
-  getListItem
+  getListItem,
+  updateProject
 };

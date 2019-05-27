@@ -30,7 +30,7 @@ class UploadController {
         }));
       });
       const file = req.body.formData; req.file
-      console.log("form data:", req.body);
+      // console.log("form data:", req.body);
       // const file = formData.file
       // if (_.isEmpty(file)) {
       //   return res.json(

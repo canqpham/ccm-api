@@ -21,6 +21,11 @@ class PriorityRepository {
       return priority
   }
 
+  getListByParams = async (data) => {
+    const priority = await Priority.find(data)
+    return priority
+  }
+
   getListAll = async () => {
       const priorities = await Priority.find()
       return priorities

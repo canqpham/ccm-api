@@ -51,6 +51,26 @@ class PriorityController {
         }
     }
 
+    getListByProject = async (req, res, next) => {
+        try {
+            const params = req.query
+            const queryParams = JSON.parse(params.query)
+
+            let priorities = await priorityRepository.getListByParams({project: queryParams.project})
+            if(!priorities) throw new Error("Can't get list priorities")
+            return res.json( new RequestResponse({
+                data: priorities,
+                statusCode: 200
+            }))
+        } catch (error) {
+            return res.json( new RequestResponse({
+                success: false,
+                statusCode: 400,
+                error
+            }))
+        }
+    }
+
     update = async (req, res, next) => {
         let data = req.body
         let userId = req.userId

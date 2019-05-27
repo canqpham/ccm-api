@@ -117,6 +117,11 @@ class ProjectMemberRepository {
     //     return result
     // }
 
+    update = async (id, data) => {
+      const result = await ProjectMember.findByIdAndUpdate(id, data)
+      return result
+    }
+
     getListByParams= async (data) => {
         const result = await ProjectMember.find(data).populate('member')
         return result
