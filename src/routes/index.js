@@ -13,6 +13,7 @@ import AssignIssueRoute from './assignIssue.route'
 import ProjectTypeRoute from './projectType.route'
 import SprintRoute from './sprint.route'
 import LabelRoute from './label.route'
+import StoryPointRoute from './storyPoint.route'
 import WorkflowRoute from './workflow.route'
 import UploadRoute from './upload.route'
 import ReleaseVersionRoute from './releaseVersion.route'
@@ -30,6 +31,7 @@ router.use('/assignIssue', AssignIssueRoute)
 router.use('/projectType', ProjectTypeRoute)
 router.use('/sprint', SprintRoute)
 router.use('/label', LabelRoute)
+router.use('/storyPoint', StoryPointRoute)
 router.use('/workflow', WorkflowRoute)
 router.use('/upload', UploadRoute)
 router.use('/releaseVersion', ReleaseVersionRoute)

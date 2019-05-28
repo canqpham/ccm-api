@@ -24,6 +24,7 @@ const IssueSchema = new Schema(
     estimateTime: {type: String},
     actualTime: {type: String},
     vote: {type: Number},
+    storyPoints: {type: Number},
     version: {type: ObjectId, ref: 'versions'},
     sequenceInBacklog: {type: Number}, // 1, 2, 3, 4, ...
     sequenceInIssues: {type: Number}, // 1, 2, 3, 4, ...

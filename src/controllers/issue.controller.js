@@ -6,6 +6,7 @@ import ProjectRepository from "../repositories/project.repository";
 import { RequestResponse } from "../utils/common";
 import ActivityRepository from "../repositories/activity.repository";
 import LabelRepository from "../repositories/label.repository";
+import StoryPointRepository from "../repositories/storyPoint.repository";
 
 import helper from "../utils/helper";
 import _ from "lodash";
@@ -19,6 +20,7 @@ const projectRepository = new ProjectRepository();
 const activityRepository = new ActivityRepository();
 const sprintRepository = new SprintRepository();
 const labelRepository = new LabelRepository();
+const storyPointRepository = new StoryPointRepository();
 
 
 class IssueController {
@@ -35,9 +37,7 @@ class IssueController {
         project: data.project
       });
       let issueKey = "";
-      // console.log("list: ", listIssueCreated)
 
-      data.label
       //set issue key
       if (!listIssueCreated || _.isEmpty(listIssueCreated)) {
         issueKey = project.key + "-1";
@@ -49,13 +49,14 @@ class IssueController {
             (Number(_.split(temp, "-")[_.split(temp, "-").length - 1]) + 1)
           : project.key + "-" + (listIssueCreated.length + 1);
       }
+
       // check user exist
       if (!user) throw new Error("Your account can't create issue.");
 
       const workflow = await workflowRepository.getWorkflow({ type: "TODO" });
       data = {
         ...data,
-        creator: user.displayName,
+        creator: user.displayName || user.fullName,
         workflow: workflow._id,
         issueKey
       };
@@ -71,6 +72,11 @@ class IssueController {
           !isLabelExist && labelRepository.create({name: item, project: data.project})
         }
       })
+
+      if (Number(data.storyPoint)) {
+        const isStoryPointExist = await storyPointRepository.getStoryPoint({point: data.storyPoint})
+        !isStoryPointExist && storyPointRepository.create({point: data.storyPoint, project: data.project})
+      }
 
       const paramsActivity = {
         issue: issue._id,
