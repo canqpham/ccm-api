@@ -20,7 +20,7 @@ class LabelRepository {
   }
 
   getListByParams = async (data) => {
-    const points = await StoryPointModel.find(data)
+    const points = await StoryPointModel.find(data).sort({point: 1})
       return points
   }
 
