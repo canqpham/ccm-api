@@ -114,22 +114,6 @@ class SprintRepository {
           }
         }
       },
-      // {
-      //   $redact: {
-      //       $cond: [
-      //           {
-      //             $gt: [ "$issues.workflow", "$workflow._id" ]
-      //           },
-      //           "$$KEEP",
-      //           "$$PRUNE"
-      //       ]
-      //   }
-      // }
-      // {
-      //   $match: {
-      //     "workflow._id": "$issues.workflow"
-      //   }
-      // },
       {
         $group: {
           _id: "$workflow._id",
@@ -137,17 +121,6 @@ class SprintRepository {
           workflow: { $first: "$workflow" }
         }
       }
-      // {
-      //   $redact: {
-      //     $cond: {
-      //       if: {
-      //         $eq: ["$issues.workflow", "_id"]
-      //       },
-      //       then: "$$DESCEND",
-      //       else: "$$PRUNE"
-      //     }
-      //   }
-      // }
     ]);
     return workflow;
   };
