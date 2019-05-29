@@ -73,9 +73,9 @@ class IssueController {
         }
       })
 
-      if (Number(data.storyPoint)) {
-        const isStoryPointExist = await storyPointRepository.getStoryPoint({point: data.storyPoint})
-        !isStoryPointExist && storyPointRepository.create({point: data.storyPoint, project: data.project})
+      if (Number(data.storyPoints)) {
+        const isStoryPointExist = await storyPointRepository.getStoryPoint({point: data.storyPoints})
+        !isStoryPointExist && storyPointRepository.create({point: data.storyPoints, project: data.project})
       }
 
       const paramsActivity = {
