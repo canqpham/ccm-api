@@ -2,7 +2,7 @@ import Sprint from "../models/sprints.model";
 import mongoose, { Query } from "mongoose";
 
 class SprintRepository {
-  constructor() {}
+  constructor() { }
 
   create = async data => {
     const sprint = await Sprint.create(data);
@@ -91,6 +91,31 @@ class SprintRepository {
         $unwind: {
           path: "$issues",
           preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: "issueTypes",
+          localField: "issues.issueType",
+          foreignField: "_id",
+          // pipeline: [
+          //   { $match: { "_id": "$issues.issueType" } },
+          //   { $project: { iconUrl: "$iconUrl" } }
+          // ],
+          as: "issues.issueType"
+        }
+      },
+      {
+        $unwind: {
+          path: "$issueType",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $addFields: {
+          "issues.issueType": {
+            $arrayElemAt: ['$issues.issueType', 0]
+          }
         }
       },
       {
@@ -300,7 +325,7 @@ class SprintRepository {
           createdAt: 1
         }
       },
-     
+
     ]);
     // console.log(sprints)
     return sprints;
