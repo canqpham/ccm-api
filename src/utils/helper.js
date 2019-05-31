@@ -34,7 +34,7 @@ const getListItem = (model, params) => {
   let sort = params.sort ? JSON.parse(params.sort) : {}
   let populate = getPopulate(params)
   let projection = params.projection ? params.projection : {}
-  let promiseList = model.find(query).sort(sort).skip(skip).limit(pageSize * 1).select(projection);
+  let promiseList = model.find(query).skip(skip).limit(pageSize * 1).select(projection);
 
   // console.log({populate, params})
   if(type(populate) === 'String') {
@@ -42,7 +42,7 @@ const getListItem = (model, params) => {
   } else if(!_.isEmpty(populate)) {
     promiseList.populate(populate)
   }
-  return Promise.all([promiseList, model.count(query)]);
+  return Promise.all([promiseList.sort(sort), model.count(query)]);
 }
 
 const convertDeepPopulates = (populates) => {

@@ -129,7 +129,7 @@ class IssueController {
     try {
       const populate = JSON.stringify({
         path: "sprint workflow issueType priority",
-        select: "type iconUrl name"
+        select: "type iconUrl name level"
       });
       const paramsQuery = {
         ...params,
