@@ -53,7 +53,7 @@ class IssueController {
       // check user exist
       if (!user) throw new Error("Your account can't create issue.");
 
-      const workflow = await workflowRepository.getWorkflow({ type: "TODO" });
+      const workflow = await workflowRepository.getWorkflow({ type: "TODO", project: data.project });
       data = {
         ...data,
         creator: user.displayName || user.fullName,

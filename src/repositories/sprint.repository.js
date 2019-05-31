@@ -2,7 +2,7 @@ import Sprint from "../models/sprints.model";
 import mongoose, { Query } from "mongoose";
 
 class SprintRepository {
-  constructor() {}
+  constructor() { }
 
   create = async data => {
     const sprint = await Sprint.create(data);
@@ -95,6 +95,31 @@ class SprintRepository {
       },
       {
         $lookup: {
+          from: "issueTypes",
+          localField: "issues.issueType",
+          foreignField: "_id",
+          // pipeline: [
+          //   { $match: { "_id": "$issues.issueType" } },
+          //   { $project: { iconUrl: "$iconUrl" } }
+          // ],
+          as: "issues.issueType"
+        }
+      },
+      {
+        $unwind: {
+          path: "$issueType",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $addFields: {
+          "issues.issueType": {
+            $arrayElemAt: ['$issues.issueType', 0]
+          }
+        }
+      },
+      {
+        $lookup: {
           from: "workflow",
           localField: "project",
           foreignField: "project",
@@ -114,22 +139,6 @@ class SprintRepository {
           }
         }
       },
-      // {
-      //   $redact: {
-      //       $cond: [
-      //           {
-      //             $gt: [ "$issues.workflow", "$workflow._id" ]
-      //           },
-      //           "$$KEEP",
-      //           "$$PRUNE"
-      //       ]
-      //   }
-      // }
-      // {
-      //   $match: {
-      //     "workflow._id": "$issues.workflow"
-      //   }
-      // },
       {
         $group: {
           _id: "$workflow._id",
@@ -137,17 +146,6 @@ class SprintRepository {
           workflow: { $first: "$workflow" }
         }
       }
-      // {
-      //   $redact: {
-      //     $cond: {
-      //       if: {
-      //         $eq: ["$issues.workflow", "_id"]
-      //       },
-      //       then: "$$DESCEND",
-      //       else: "$$PRUNE"
-      //     }
-      //   }
-      // }
     ]);
     return workflow;
   };
@@ -327,7 +325,7 @@ class SprintRepository {
           createdAt: 1
         }
       },
-     
+
     ]);
     // console.log(sprints)
     return sprints;
