@@ -56,7 +56,7 @@ class IssueController {
       const workflow = await workflowRepository.getWorkflow({ type: "TODO", project: data.project });
       data = {
         ...data,
-        creator: user.displayName || user.fullName,
+        creator: user._id,
         workflow: workflow._id,
         issueKey
       };
@@ -66,15 +66,17 @@ class IssueController {
 
       helper.updateProject(data.project);
 
-      data.label.map( async item => {
-        if(item) {
-          const isLabelExist = await labelRepository.getLabel({name: item})
-          !isLabelExist && labelRepository.create({name: item, project: data.project})
-        }
-      })
+      if(!_.isEmpty(data.label)) {
+        data.label.map( async item => {
+          if(item) {
+            const isLabelExist = await labelRepository.getLabel({name: item, project: issue.project})
+            !isLabelExist && labelRepository.create({name: item, project: issue.project})
+          }
+        })
+      }
 
       if (Number(data.storyPoints)) {
-        const isStoryPointExist = await storyPointRepository.getStoryPoint({point: data.storyPoints})
+        const isStoryPointExist = await storyPointRepository.getStoryPoint({point: data.storyPoints, project: data.project})
         !isStoryPointExist && storyPointRepository.create({point: data.storyPoints, project: data.project})
       }
 
@@ -203,8 +205,44 @@ class IssueController {
     const userId = req.userId;
     try {
       let issue = await issueRepository.update(id, data);
+
+      const user = await userRepository.getUserInfo(userId);
+      // check user exist
+      if (!user) throw new Error("Your account can't update this issue.");
       // console.log(issue)
       if (!issue) throw new Error("Can't update issue");
+
+      if(!_.isEmpty(data.label)) {
+        data.label.map( async item => {
+          if(item) {
+            const isLabelExist = await labelRepository.getLabel({name: item, project: issue.project})
+            !isLabelExist && labelRepository.create({name: item, project: issue.project})
+          }
+        })
+      }
+
+      if (Number(data.storyPoints)) {
+        const isStoryPointExist = await storyPointRepository.getStoryPoint({point: data.storyPoints, project: data.project})
+        !isStoryPointExist && storyPointRepository.create({point: data.storyPoints, project: data.project})
+      }
+
+      let element = ''
+      if(Object.keys( data ).length == 1) {
+        element = Object.keys(data)[0]
+      } else {
+        for ( var property in data ) {
+          element = element + `, ${property}`
+        }
+      }
+      if(Object.keys( data ).length >= 1) {
+        const paramsActivity = {
+          issue: issue._id,
+          content: `<b>${user.displayName}</b> updated <b>${element}</b> `
+        };
+  
+        activityRepository.create(paramsActivity); // create activity
+      }
+
       helper.updateProject(issue.project);
       return res.json(
         new RequestResponse({

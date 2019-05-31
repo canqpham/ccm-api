@@ -72,6 +72,14 @@ class IssueRepository {
         },
       },
       {
+        $lookup: {
+          from: 'users',
+          localField: "creator",
+          foreignField: "_id",
+          as: 'creator'
+        },
+      },
+      {
         $addFields: { 
           workflow: {
             $arrayElemAt: [ '$workflow', 0 ]
@@ -81,6 +89,9 @@ class IssueRepository {
           },
           sprint: {
             $arrayElemAt: [ '$sprint', 0 ]
+          },
+          creator: {
+            $arrayElemAt: [ '$creator', 0 ]
           },
         }
       },
@@ -96,7 +107,6 @@ class IssueRepository {
       },
       {
         $addFields: {
-          //  item: 1,
           numberOfAssignee: {
             $cond: {
               if: { $isArray: "$assignees" },
@@ -104,14 +114,6 @@ class IssueRepository {
               else: "NA"
             }
           }
-        }
-      },
-      {
-        $lookup: {
-          from: "issues",
-          localField: "_id",
-          foreignField: "subTaskOfIssue",
-          as: "subtaks"
         }
       },
       {
@@ -142,6 +144,81 @@ class IssueRepository {
           ],
           as: "activities"
         }
+      },
+      {
+        $lookup: {
+          from: 'issues',
+          localField: '_id',
+          foreignField: "subTaskOfIssue",
+          as: "subtasks"
+        }
+      },
+      {
+        $unwind: {
+          path: "$subtasks",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: 'issueTypes',
+          localField: 'subtasks.issueType',
+          foreignField: "_id",
+          as: "subtasks.issueType"
+        }
+      },
+      {
+        $lookup: {
+          from: 'priorities',
+          localField: 'subtasks.priority',
+          foreignField: "_id",
+          as: "subtasks.priority"
+        }
+      },
+      {
+        $lookup: {
+          from: 'workflow',
+          localField: 'subtasks.workflow',
+          foreignField: "_id",
+          as: "subtasks.workflow"
+        }
+      },
+      {
+        $addFields: {
+          "subtasks.issueType": {
+            $arrayElemAt: ['$subtasks.issueType', 0]
+          },
+          "subtasks.priority": {
+            $arrayElemAt: ['$subtasks.priority', 0]
+          },
+          "subtasks.workflow": {
+            $arrayElemAt: ['$subtasks.workflow', 0]
+          },
+        }
+      },
+      { 
+        $group: { 
+          _id: "$_id",
+          subtasks: { $push: "$subtasks" },
+          assignee: { $first: "$assignee" },
+          attachs: { $first: "$attachs" },
+          label: { $first: "$label" },
+          closed: { $first: "$closed" },
+          project: { $first: "$project" },
+          description: { $first: "$description" },
+          summary: { $first: "$summary" },
+          issueType: { $first: "$issueType" },
+          priority: { $first: "$priority" },
+          storyPoints: { $first: "$storyPoints" },
+          creator: { $first: "$creator" },
+          workflow: { $first: "$workflow" },
+          issueKey: { $first: "$issueKey" },
+          createdAt: { $first: "$createdAt" },
+          updatedAt: { $first: "$updatedAt" },
+          numberOfAssignee: { $first: "$numberOfAssignee" },
+          comments: { $first: "$comments" },
+          activities: { $first: "$activities" },
+        } 
       }
     ]);
     // let result  = issue.populate('workflow')
