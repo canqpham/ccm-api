@@ -265,7 +265,7 @@ class SprintController {
     try {
       const params = req.query
       const query = JSON.parse(params.query)
-      const sprint = await sprintRepository.getSprintActiveInProject(query)
+      const sprint = await sprintRepository.getSprintActiveInProject({...query, active: true })
       if(!sprint) throw new Error("Cannot get sprint is actived.")
       return res.json( new RequestResponse({
         data: sprint,
