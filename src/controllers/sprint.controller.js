@@ -241,13 +241,12 @@ class SprintController {
       const sprints = await sprintRepository.getListSprintByParams({ project });
       if (!sprints) throw new Error("Not found sprints of this project");
 
-      const sprint = await sprintRepository.update(sprintId, data);
+      const sprint = await sprintRepository.update(sprintId, {...data, completed: true, active:false });
       if (!sprint) throw new Error("Can't start sprint");
 
       return res.json(
         new RequestResponse({
           statusCode: 200,
-          data: sprint
         })
       );
     } catch (error) {
