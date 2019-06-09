@@ -201,6 +201,8 @@ class IssueRepository {
           _id: "$_id",
           subtasks: { $push: "$subtasks" },
           assignee: { $first: "$assignee" },
+          version: { $first: "$version" },
+          sprint: { $first: "$sprint" },
           attachs: { $first: "$attachs" },
           label: { $first: "$label" },
           closed: { $first: "$closed" },

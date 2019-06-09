@@ -231,15 +231,30 @@ class IssueController {
         element = Object.keys(data)[0]
       } else {
         for ( var property in data ) {
-          element = element + `, ${property}`
+
+          element = (property != 'closed') && element + `, ${property}`
         }
       }
-      if(Object.keys( data ).length >= 1) {
+
+      if(Object.keys( data ).length >= 1 && Object.keys( data )[0] != 'closed') {
         const paramsActivity = {
           issue: issue._id,
           content: `<b>${user.displayName}</b> updated <b>${element}</b> `
         };
-  
+        activityRepository.create(paramsActivity); // create activity
+      }
+
+      if(data.closed === true) {
+        const paramsActivity = {
+          issue: issue._id,
+          content: `<b>${user.displayName}</b> closed issue `
+        };
+        activityRepository.create(paramsActivity); // create activity
+      } else if (data.closed === false) {
+        const paramsActivity = {
+          issue: issue._id,
+          content: `<b>${user.displayName}</b> reopen issue `
+        };
         activityRepository.create(paramsActivity); // create activity
       }
 
@@ -262,10 +277,22 @@ class IssueController {
   };
 
   remove = async (req, res, next) => {
-    const id = req.id;
+    const id = req.params.id;
+    const userId = req.userId;
     try {
+      const user = await userRepository.getUserInfo(userId);
+      // check user exist
+      if (!user) throw new Error("Your account can't update this issue.");
+
       let issue = issueRepository.remove(id);
       if (!issue) throw new Error("Can't remove issue");
+
+      const paramsActivity = {
+        issue: issue._id,
+        content: `<b>${user.displayName}</b> delete issue `
+      };
+      activityRepository.create(paramsActivity); // create activity
+
       helper.updateProject(issue.project);
       return res.json(
         new RequestResponse({

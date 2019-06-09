@@ -18,6 +18,7 @@ import WorkflowRoute from './workflow.route'
 import UploadRoute from './upload.route'
 import ReleaseVersionRoute from './releaseVersion.route'
 import MediaRoute from './media.route'
+import ComponentRoute from './component.route'
 // Handler route
 router.use('/auth', AuthRoute)
 router.use('/project', ProjectRoute)
@@ -36,4 +37,5 @@ router.use('/workflow', WorkflowRoute)
 router.use('/upload', UploadRoute)
 router.use('/releaseVersion', ReleaseVersionRoute)
 router.use('/media', MediaRoute)
+router.use('/component', ComponentRoute)
 module.exports = router
