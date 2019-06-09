@@ -204,7 +204,7 @@ class SprintRepository {
       //   }
       // }
     ]);
-    return sprint;
+    return sprint[0];
   };
 
   getListAll = async () => {
