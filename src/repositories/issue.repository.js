@@ -79,6 +79,14 @@ class IssueRepository {
           as: 'creator'
         },
       },
+      // {
+      //   $lookup: {
+      //     from: 'components',
+      //     localField: "component",
+      //     foreignField: "_id",
+      //     as: 'component'
+      //   },
+      // },
       {
         $addFields: { 
           workflow: {
@@ -204,6 +212,7 @@ class IssueRepository {
           version: { $first: "$version" },
           sprint: { $first: "$sprint" },
           attachs: { $first: "$attachs" },
+          component: { $first: "$component" },
           label: { $first: "$label" },
           closed: { $first: "$closed" },
           project: { $first: "$project" },

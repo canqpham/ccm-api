@@ -20,7 +20,7 @@ class ComponentRepository {
   }
 
   getListComponentByParams = async (data) => {
-    const components = await ComponentModel.find(data)
+    const components = await ComponentModel.find(data).populate('lead')
     return components
   }
 
