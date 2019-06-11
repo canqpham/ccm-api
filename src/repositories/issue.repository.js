@@ -36,6 +36,11 @@ class IssueRepository {
     return issues;
   };
 
+  getIssue = async data => {
+    const issue = await Issue.findOne(data);
+    return issue;
+  };
+
   getIssueInfo = async id => {
     const issue = await Issue.aggregate([
       {
@@ -211,6 +216,7 @@ class IssueRepository {
           assignee: { $first: "$assignee" },
           version: { $first: "$version" },
           sprint: { $first: "$sprint" },
+          sprintHistory: { $first: "$sprintHistory" },
           attachs: { $first: "$attachs" },
           component: { $first: "$component" },
           label: { $first: "$label" },

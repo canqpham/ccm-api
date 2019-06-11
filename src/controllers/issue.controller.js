@@ -54,15 +54,26 @@ class IssueController {
       if (!user) throw new Error("Your account can't create issue.");
 
       const workflow = await workflowRepository.getWorkflow({ type: "TODO", project: data.project });
+
+      let sprintHistory = data.sprintHistory || []
+      if(data.sprint && sprintHistory[sprintHistory.length - 1] != data.sprint) {
+        sprintHistory.push(data.sprint)
+      }
+
       data = {
         ...data,
         creator: user._id,
         workflow: workflow._id,
-        issueKey
+        issueKey,
+        sprintHistory
       };
 
       let issue = await issueRepository.create(data);
       if (!issue) throw new Error("Can't create issue.");
+
+      if(issue.subTaskOfIssue) {
+        this.mapSubTaskSprint(issue._id, issue.subTaskOfIssue, null)
+      }
 
       helper.updateProject(data.project);
 
@@ -79,6 +90,8 @@ class IssueController {
         const isStoryPointExist = await storyPointRepository.getStoryPoint({point: data.storyPoints, project: data.project})
         !isStoryPointExist && storyPointRepository.create({point: data.storyPoints, project: data.project})
       }
+
+      
 
       const paramsActivity = {
         issue: issue._id,
@@ -204,13 +217,26 @@ class IssueController {
     const id = req.params.id;
     const userId = req.userId;
     try {
-      let issue = await issueRepository.update(id, data);
+      let issue = {}
+      if(data.sprint) {
+        const issueTemp = await issueRepository.getIssueInfo(id)
+        let sprintHistory = issueTemp.sprintHistory || []
+        if(sprintHistory[sprintHistory.length - 1] != data.sprint) {
+          sprintHistory.push(data.sprint)
+          issue = await issueRepository.update(id, {...data, sprintHistory });
+        }
+      } else {
+        issue = await issueRepository.update(id, data);
+      }
 
       const user = await userRepository.getUserInfo(userId);
       // check user exist
       if (!user) throw new Error("Your account can't update this issue.");
       // console.log(issue)
       if (!issue) throw new Error("Can't update issue");
+
+      // map sprint to subtask
+      this.mapSubTaskSprint(issue._id, null, issue.sprint)
 
       if(!_.isEmpty(data.label)) {
         data.label.map( async item => {
@@ -275,6 +301,28 @@ class IssueController {
       );
     }
   };
+
+  mapSubTaskSprint = async (id, subTaskOfIssue, sprintId) => {
+    if(subTaskOfIssue) {
+      let sprintHistory = []
+      const issueTemp = await issueRepository.getIssue({_id: subTaskOfIssue})
+      
+      sprintHistory.push(issueTemp.sprint)
+      await issueRepository.update(id, {sprint: issueTemp.sprint, sprintHistory})
+    } else {
+      if(id && sprintId) {
+        const issues = await issueRepository.getListIssueByParams({subTaskOfIssue: id})
+        console.log(issues)
+        issues.map(issue => {
+          let sprintHistory = issue.sprintHistory || []
+          if(sprintHistory[sprintHistory.length - 1] != sprintId) {
+            sprintHistory.push(sprintId)
+            issueRepository.update(issue._id, {sprintHistory, sprint: sprintId });
+          }
+        })
+      }
+    }
+  }
 
   remove = async (req, res, next) => {
     const id = req.params.id;
