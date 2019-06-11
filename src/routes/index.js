@@ -19,6 +19,7 @@ import UploadRoute from './upload.route'
 import ReleaseVersionRoute from './releaseVersion.route'
 import MediaRoute from './media.route'
 import ComponentRoute from './component.route'
+import CommentRoute from './comment.route'
 // Handler route
 router.use('/auth', AuthRoute)
 router.use('/project', ProjectRoute)
@@ -38,4 +39,5 @@ router.use('/upload', UploadRoute)
 router.use('/releaseVersion', ReleaseVersionRoute)
 router.use('/media', MediaRoute)
 router.use('/component', ComponentRoute)
+router.use('/comment', CommentRoute)
 module.exports = router
