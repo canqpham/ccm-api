@@ -254,7 +254,11 @@ class IssueController {
 
       let element = ''
       if(Object.keys( data ).length == 1) {
-        element = Object.keys(data)[0]
+        if(Object.keys(data)[0] == 'sprint') {
+          element = "sprint of this issue"
+        } else {
+          element = Object.keys(data)[0]
+        }
       } else {
         for ( var property in data ) {
 

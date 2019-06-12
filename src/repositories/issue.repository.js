@@ -22,7 +22,7 @@ class IssueRepository {
   };
 
   getListIssueByParams = async (data) => {
-    const result = await Issue.find(data)
+    const result = await Issue.find(data).populate('workflow')
     return result
   }
 

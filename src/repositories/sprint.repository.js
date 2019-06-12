@@ -68,7 +68,7 @@ class SprintRepository {
       //   }
       // }
     ]);
-    return sprint;
+    return sprint[0];
   };
 
   getListWorkflowByProject = async id => {
@@ -127,6 +127,18 @@ class SprintRepository {
         $unwind: {
           path: "$priority",
           preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "issues.assignee",
+          foreignField: "_id",
+          // pipeline: [
+          //   { $match: { "_id": "$issues.issueType" } },
+          //   { $project: { iconUrl: "$iconUrl" } }
+          // ],
+          as: "issues.assignee"
         }
       },
       {

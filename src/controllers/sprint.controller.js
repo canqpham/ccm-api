@@ -1,6 +1,8 @@
 import SprintRepository from "../repositories/sprint.repository";
 import IssueRepository from "../repositories/issue.repository";
 import WorkflowRepository from "../repositories/workflow.repository";
+import ActivityRepository from "../repositories/activity.repository";
+import UserRepository from "../repositories/user.repository";
 import moment from "moment";
 
 import { RequestResponse } from "../utils/common";
@@ -10,6 +12,8 @@ const sprintRepository = new SprintRepository();
 const workflowRepository = new WorkflowRepository();
 const issueRepository = new IssueRepository();
 const projectRepository = new ProjectRepository();
+const activityRepository = new ActivityRepository();
+const userRepository = new UserRepository();
 
 class SprintController {
   constructor() {}
@@ -42,9 +46,11 @@ class SprintController {
   };
 
   getListAll = async (req, res, next) => {
+    let params = req.query;
     let userId = req.userId;
     try {
-      const sprints = await sprintRepository.getListAll();
+      const queryParams = JSON.parse(params.query)
+      const sprints = await sprintRepository.getListSprintByParams(queryParams);
       if (!sprints) throw new Error("Can't get list sprints");
       return res.json(
         new RequestResponse({
@@ -232,8 +238,28 @@ class SprintController {
     }
   };
 
+  moveIssueToNewSprint = async (userId, oldSprint, newSprint) => {
+    // console.log('oldSprint: ', oldSprint)
+    // console.log('newSprint: ', newSprint)
+    const user = await userRepository.getUserInfo(userId);
+    const issues = await issueRepository.getListIssueByParams({sprint: oldSprint})
+    console.log(issues)
+    issues.map(issue => {
+      if(issue.workflow.type != "DONE") {
+        let sprintHistory = issue.sprintHistory || []
+        sprintHistory.push(newSprint)
+        issueRepository.update(issue._id, {sprintHistory, sprint: newSprint });
+        const paramsActivity = {
+          issue: issue._id,
+          content: `<b>${user.displayName}</b> updated <b>sprint of this issue</b> `
+        };
+        activityRepository.create(paramsActivity);
+      }
+    })
+  }
+
   completeSprint = async (req, res, next) => {
-    const { project } = req.body;
+    const { project, moveToSprint } = req.body;
     const data = req.body;
     const sprintId = req.body.sprint;
     const userId = req.userId;
@@ -243,6 +269,8 @@ class SprintController {
 
       const sprint = await sprintRepository.update(sprintId, {...data, completed: true, active:false });
       if (!sprint) throw new Error("Can't start sprint");
+
+      this.moveIssueToNewSprint(userId, sprintId, moveToSprint)
 
       return res.json(
         new RequestResponse({
