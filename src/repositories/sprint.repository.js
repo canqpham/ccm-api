@@ -112,9 +112,30 @@ class SprintRepository {
         }
       },
       {
+        $lookup: {
+          from: "priorities",
+          localField: "issues.priority",
+          foreignField: "_id",
+          // pipeline: [
+          //   { $match: { "_id": "$issues.issueType" } },
+          //   { $project: { iconUrl: "$iconUrl" } }
+          // ],
+          as: "issues.priority"
+        }
+      },
+      {
+        $unwind: {
+          path: "$priority",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
         $addFields: {
           "issues.issueType": {
             $arrayElemAt: ['$issues.issueType', 0]
+          },
+          "issues.priority": {
+            $arrayElemAt: ['$issues.priority', 0]
           }
         }
       },

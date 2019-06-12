@@ -146,7 +146,21 @@ class IssueRepository {
             }
           ],
           as: "comments"
+        },
+      },
+      {
+        $unwind: {
+          path: "$comments",
+          preserveNullAndEmptyArrays: true
         }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: "comments.creator",
+          foreignField: "_id",
+          as: 'comments.creator'
+        },
       },
       {
         $lookup: {
@@ -207,6 +221,9 @@ class IssueRepository {
           "subtasks.workflow": {
             $arrayElemAt: ['$subtasks.workflow', 0]
           },
+          "comments.creator": {
+            $arrayElemAt: ['$comments.creator', 0]
+          },
         }
       },
       { 
@@ -233,7 +250,7 @@ class IssueRepository {
           createdAt: { $first: "$createdAt" },
           updatedAt: { $first: "$updatedAt" },
           numberOfAssignee: { $first: "$numberOfAssignee" },
-          comments: { $first: "$comments" },
+          comments: { $push: "$comments" },
           activities: { $first: "$activities" },
         } 
       }

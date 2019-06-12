@@ -190,7 +190,7 @@ class SprintController {
   };
 
   startSprint = async (req, res, next) => {
-    const { project } = req.body;
+    const { project, startDate, endDate } = req.body;
     // const data = req.body
     const sprintId = req.body.sprint;
     const userId = req.userId;
@@ -212,7 +212,7 @@ class SprintController {
       // issues.map(async issue => {
       //   await issueRepository.update(issue._id, { workflow: workflowTodo._id });
       // });
-      const sprint = await sprintRepository.update(sprintId, { active: true });
+      const sprint = await sprintRepository.update(sprintId, { active: true, startDate, endDate });
       if (!sprint) throw new Error("Can't start sprint");
 
       return res.json(

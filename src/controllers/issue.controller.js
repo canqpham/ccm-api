@@ -312,7 +312,7 @@ class IssueController {
     } else {
       if(id && sprintId) {
         const issues = await issueRepository.getListIssueByParams({subTaskOfIssue: id})
-        console.log(issues)
+        // console.log(issues)
         issues.map(issue => {
           let sprintHistory = issue.sprintHistory || []
           if(sprintHistory[sprintHistory.length - 1] != sprintId) {
