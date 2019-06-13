@@ -44,6 +44,25 @@ class VersionController {
     }
   }
 
+  getListIssueInVersion = async (req, res, next) => {
+    let userId= req.userId
+    try {
+      const id = req.params.id
+      const issues = await versionRepository.getListIssueInVersion(id)
+      if(!issues) throw new Error("Can't get list issue")
+      return res.json(new RequestResponse({
+        statusCode: 200,
+        data: issues
+      }))
+    } catch(error) {
+      return res.json(new RequestResponse({
+        success: false,
+        statusCode: 400,
+        error
+      }))
+    }
+  }
+
   getListAll = async (req, res, next) => {
     let userId= req.userId
     try {

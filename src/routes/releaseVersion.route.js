@@ -15,5 +15,6 @@ router.get('/', Authenticate(),  versionController.getListByProject)
 router.post('/', Authenticate(),  versionController.release)
 router.put('/:id', Authenticate(), versionController.update)
 router.delete('/:id', Authenticate(), versionController.remove)
+router.get('/:id', Authenticate(), versionController.getListIssueInVersion)
 
 module.exports = router
