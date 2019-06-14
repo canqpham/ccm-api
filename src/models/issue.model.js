@@ -32,7 +32,8 @@ const IssueSchema = new Schema(
     sequenceInIssues: {type: Number}, // 1, 2, 3, 4, ...
     sequenceInSprint: {type: Number}, // 1, 2, 3, 4, ...
     sequenceInWorkflow: {type: Number}, // 1, 2, 3, 4, ...
-    closed: {type: Boolean, default: false}
+    closed: {type: Boolean, default: false},
+    released: {type: Boolean, default: false}
   },
   {
     collection: 'issues',

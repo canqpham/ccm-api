@@ -240,6 +240,7 @@ class IssueRepository {
           closed: { $first: "$closed" },
           project: { $first: "$project" },
           description: { $first: "$description" },
+          released: { $first: "$released" },
           summary: { $first: "$summary" },
           issueType: { $first: "$issueType" },
           priority: { $first: "$priority" },

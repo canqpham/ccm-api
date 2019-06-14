@@ -1,11 +1,19 @@
 import VersionRepository from '../repositories/version.repository'
+import IssueRepository from '../repositories/issue.repository'
+import ActivityRepository from '../repositories/activity.repository'
+import UserRepository from "../repositories/user.repository";
+
 import { RequestResponse } from '../utils/common'
-const versionRepository = new VersionRepository
+
+const versionRepository = new VersionRepository()
+const issueRepository = new IssueRepository()
+const activityRepository = new ActivityRepository()
+const userRepository = new UserRepository();
 
 class VersionController {
   constructor() {}
 
-  release = async (req, res, next) => {
+  createVersion = async (req, res, next) => {
     let data = req.body
     let userId= req.userId
     try {
@@ -24,12 +32,60 @@ class VersionController {
     }
   }
 
+  updateIssueReleaseStatus = async (version, status) => {
+    const issues = await issueRepository.getListIssueByParams({version})
+    issues.map(issue => {
+      issueRepository.update(issue._id, {released: status})
+    })
+  }
+
+  release = async (req, res, next) => {
+    let userId = req.userId
+    let id = req.params.id
+    try {
+      const version = await versionRepository.update(id, {released: true, status: "RELEASED"})
+      if(!version) throw new Error("Can't create project type")
+      this.updateIssueReleaseStatus(id, true)
+
+      return res.json(new RequestResponse({
+        statusCode: 200,
+        data: version
+      }))
+    } catch (error) {
+      return res.json(new RequestResponse({
+        success: false,
+        statusCode: 400,
+        error
+      }))
+    }
+  }
+
+  unrelease = async (req, res, next) => {
+    let userId = req.userId
+    let id = req.params.id
+    try {
+      const version = await versionRepository.update(id, {released: false, status: "UNRELEASED"})
+      if(!version) throw new Error("Can't create project type")
+      this.updateIssueReleaseStatus(id, false)
+      return res.json(new RequestResponse({
+        statusCode: 200,
+        data: version
+      }))
+    } catch (error) {
+      return res.json(new RequestResponse({
+        success: false,
+        statusCode: 400,
+        error
+      }))
+    }
+  }
+
   getListByProject = async (req, res, next) => {
     let userId= req.userId
     try {
       const params = req.query
       const queryParams = JSON.parse(params.query)
-      const versions = await versionRepository.getListVersionByParams(queryParams)
+      const versions = await versionRepository.getListVersionByProject(queryParams.project)
       if(!versions) throw new Error("Can't get list version")
       return res.json(new RequestResponse({
         statusCode: 200,
@@ -102,12 +158,36 @@ class VersionController {
         }
     }
 
+    mapIssueToNewVersion = async (userId, version, nextVersion) => {
+      const user = await userRepository.getUserInfo(userId)
+      const issues = await issueRepository.getListIssueByParams({version})
+      console.log(issues)
+      issues.map(issue => {
+        issueRepository.update(issue._id, {version: nextVersion})
+        const paramsActivity = {
+          issue: issue._id,
+          content: `<b>${user.displayName}</b> updated  <b>version</b> `
+        };
+        activityRepository.create(paramsActivity);
+      })
+    }
+
     remove = async (req, res, next) => {
         let id = req.params.id
         let userId = req.userId
+        let {nextVersion} = req.body
+        // console.log(data)
         try {
+          
             let version = await versionRepository.remove(id)
             if(!version) throw new Error("Can't remove project type")
+
+            if(nextVersion) {
+              console.log(nextVersion)
+              this.mapIssueToNewVersion(userId, id, nextVersion)
+            } else {
+              this.mapIssueToNewVersion(userId, id, null)
+            }
 
             return res.json(new RequestResponse({
                 statusCode: 200

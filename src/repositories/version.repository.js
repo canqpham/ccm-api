@@ -26,8 +26,181 @@ class VersionRepository {
     return versions
   }
 
+  getListVersionByProject = async (project) => {
+    const versions = await Version.aggregate([
+      {
+        $match: {
+          project: mongoose.Types.ObjectId(project),
+          // active: params.active
+        }
+      },
+      {
+        $lookup: {
+          from: "issues",
+          localField: "_id",
+          foreignField: "version",
+          as: "issues"
+        }
+      },
+      {
+        $unwind: {
+          path: "$issues",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: "issueTypes",
+          localField: "issues.issueType",
+          foreignField: "_id",
+          // pipeline: [
+          //   { $match: { "_id": "$issues.issueType" } },
+          //   { $project: { iconUrl: "$iconUrl" } }
+          // ],
+          as: "issues.issueType"
+        }
+      },
+      {
+        $unwind: {
+          path: "$issueType",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: "priorities",
+          localField: "issues.priority",
+          foreignField: "_id",
+          // pipeline: [
+          //   { $match: { "_id": "$issues.issueType" } },
+          //   { $project: { iconUrl: "$iconUrl" } }
+          // ],
+          as: "issues.priority"
+        }
+      },
+      {
+        $unwind: {
+          path: "$priority",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "issues.assignee",
+          foreignField: "_id",
+          // pipeline: [
+          //   { $match: { "_id": "$issues.issueType" } },
+          //   { $project: { iconUrl: "$iconUrl" } }
+          // ],
+          as: "issues.assignee"
+        }
+      },
+      {
+        $addFields: {
+          "issues.issueType": {
+            $arrayElemAt: ['$issues.issueType', 0]
+          },
+          "issues.priority": {
+            $arrayElemAt: ['$issues.priority', 0]
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: "workflow",
+          localField: "issues.workflow",
+          foreignField: "_id",
+          as: "issues.workflow"
+        }
+      },
+      {
+        $unwind: {
+          path: "$issues.workflow",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $group: {
+          _id: "$_id",
+          issues: { $push: "$issues" },
+          createdAt: { $first: "$createdAt" },
+          endDate: { $first: "$endDate" },
+          description: { $first: "$description" },
+          released: { $first: "$released" },
+          status: { $first: "$status" },
+          name: { $first: "$name" },
+          project: { $first: "$project" },
+          startDate: { $first: "$startDate" },
+          releaseDate: { $first: "$releaseDate" },
+          updatedAt: { $first: "$updatedAt" }
+        }
+      },
+       {
+        $addFields: {
+          issueTotal: {
+            $size: "$issues"
+          }
+        }
+      },
+      {
+        $project: {
+          issueTotal: "$issueTotal",
+          createdAt: "$createdAt",
+          endDate: "$endDate",
+          name: "$name",
+          description: "$description",
+          released: "$released",
+          status: "$status",
+          project: "$project",
+          startDate: "$startDate",
+          releaseDate: "$releaseDate",
+          updatedAt: "$updatedAt",
+          // issues: "$issues",
+          count: {
+            toDo: {
+              $size: {
+                $filter: {
+                  input: "$issues",
+                  as: "issue",
+                  cond: { $eq: ["$$issue.workflow.type", "TODO"] }
+                }
+              }
+            },
+            inProgress: {
+              $size: {
+                $filter: {
+                  input: "$issues",
+                  as: "issue",
+                  cond: { $eq: ["$$issue.workflow.type", "INPROGRESS"] }
+                }
+              }
+            },
+            done: {
+              $size: {
+                $filter: {
+                  input: "$issues",
+                  as: "issue",
+                  cond: { $eq: ["$$issue.workflow.type", "DONE"] }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        $sort: {
+          sequence: -1,
+          createdAt: 1
+        }
+      },
+
+    ]);
+    return versions
+  }
+
   getListIssueInVersion = async id => {
-    console.log(id)
+    // console.log(id)
     const versions = await Version.aggregate([
       {
         $match: {
@@ -128,6 +301,8 @@ class VersionRepository {
           createdAt: { $first: "$createdAt" },
           endDate: { $first: "$endDate" },
           description: { $first: "$description" },
+          released: { $first: "$released" },
+          status: { $first: "$status" },
           name: { $first: "$name" },
           project: { $first: "$project" },
           startDate: { $first: "$startDate" },
@@ -144,13 +319,13 @@ class VersionRepository {
       },
       {
         $project: {
-          active: "$active",
           issueTotal: "$issueTotal",
-          completed: "$completed",
           createdAt: "$createdAt",
           endDate: "$endDate",
-          goal: "$goal",
           name: "$name",
+          description: "$description",
+          released: "$released",
+          status: "$status",
           project: "$project",
           startDate: "$startDate",
           updatedAt: "$updatedAt",

@@ -11,7 +11,9 @@ const VersionSchema = new Schema(
     name: {type: String, required: true}, // to do, in progress, test, deploy, done or 1 2 3 4 5
     // start: {type: Boolean},
     // end: {type: Boolean},
-    status: {type: String, enum: ['RELEASED', 'UNRELEASED']},
+    releaser: {type: ObjectId, ref: "users"},
+    released: {type: Boolean, default: false},
+    status: {type: String, enum: ['RELEASED', 'UNRELEASED'], default: "UNRELEASED"},
     startDate: {type: Date},
     releaseDate: {type: Date},
     description: {type: String},
