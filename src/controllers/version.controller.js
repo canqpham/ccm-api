@@ -161,7 +161,7 @@ class VersionController {
     mapIssueToNewVersion = async (userId, version, nextVersion) => {
       const user = await userRepository.getUserInfo(userId)
       const issues = await issueRepository.getListIssueByParams({version})
-      console.log(issues)
+      // console.log(issues)
       issues.map(issue => {
         issueRepository.update(issue._id, {version: nextVersion})
         const paramsActivity = {

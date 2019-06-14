@@ -219,10 +219,15 @@ class IssueController {
     try {
       let issue = {}
       if(data.sprint) {
+        let sprint = data.sprint
+        if(data.sprint == "backlog-column") {
+          sprint = ''
+          data.sprint = null
+        }
         const issueTemp = await issueRepository.getIssueInfo(id)
         let sprintHistory = issueTemp.sprintHistory || []
-        if(sprintHistory[sprintHistory.length - 1] != data.sprint) {
-          sprintHistory.push(data.sprint)
+        if(sprintHistory[sprintHistory.length - 1] != sprint) {
+          sprintHistory.push(sprint)
           issue = await issueRepository.update(id, {...data, sprintHistory });
         }
       } else {
