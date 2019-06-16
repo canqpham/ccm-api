@@ -10,7 +10,7 @@ const workflowController = new WorkflowController();
 router.post('/', Authenticate(),  workflowController.create);
 router.put('/:id', Authenticate(),  workflowController.update);
 router.get('/list', Authenticate(), workflowController.getListWorkflow)
-
+router.post('/swap', Authenticate(), workflowController.swapWorkflow)
 // router.post('/', userController.register);
 
 module.exports = router;

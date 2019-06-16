@@ -33,6 +33,34 @@ class WorkflowController {
     }
   }
 
+  swapWorkflow = async (req, res, next) => {
+    const projectId = req.body.project
+    const {source, destination} = req.body
+    const userId = req.userId
+    try {
+      const project = await projectRepository.getProjectByParams({_id: projectId, lead: userId})
+      if(!project) throw new Error("User not have permission to create or update workflow.")
+
+      const sourceWorkflow = await workflowRepository.getWorkflow({_id: source})
+      const destinationWorkflow = await workflowRepository.getWorkflow({_id: destination})
+
+      // console.log(sourceWorkflow)
+      await workflowRepository.update(source, {sequence: destinationWorkflow.sequence })
+
+      await workflowRepository.update(destination, {sequence: sourceWorkflow.sequence })
+
+      return res.json(new RequestResponse({
+        statusCode: 200,
+      }))
+    } catch (error) {
+      return res.json(new RequestResponse({
+        statusCode: 400,
+        success: false,
+        error
+      }))
+    }
+  }
+
   update = async (req, res, next) => {
     try {
       const projectId = req.body.project

@@ -11,7 +11,6 @@ const WorkflowSchema = new Schema(
     // start: {type: Boolean},
     // end: {type: Boolean},
     type: {type: String, enum: ['TODO', 'INPROGRESS', "DONE"], default: "TODO"},
-    from: [{type: ObjectId, ref: 'workflow'}], // workflow previous
     to: [{type: ObjectId, ref: 'workflow'}], // workflow next
     linkAll: {type: Boolean, default: true}, // can link all workflow in project
     sequence: {type: Number}, // 1 2 3 4 5 6 ...
