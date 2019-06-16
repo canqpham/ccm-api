@@ -10,7 +10,7 @@ const WorkflowSchema = new Schema(
     name: {type: String, required: true}, // to do, in progress, test, deploy, done or 1 2 3 4 5
     // start: {type: Boolean},
     // end: {type: Boolean},
-    type: {type: String, enum: ['TODO', 'INPROGRESS', "DONE"]},
+    type: {type: String, enum: ['TODO', 'INPROGRESS', "DONE"], default: "TODO"},
     from: [{type: ObjectId, ref: 'workflow'}], // workflow previous
     to: [{type: ObjectId, ref: 'workflow'}], // workflow next
     linkAll: {type: Boolean, default: true}, // can link all workflow in project

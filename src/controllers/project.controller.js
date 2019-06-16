@@ -122,14 +122,7 @@ class ProjectController {
           iconUrl: "/media/task.png"
         }
       ];
-      let subTaskId;
-      issueType.map( async item => {
-        if(item.type === 'Sub Task') {
-          subTaskId = await issueTypeRepository.create(item)._id;
-        } else {
-          issueTypeRepository.create({...item, children: [subTaskId]})
-        }
-      })
+      
 
       const priority = [
         {
@@ -163,8 +156,8 @@ class ProjectController {
           iconUrl: '/media/lowest.svg'
         },
       ]
-
-      priority.map(item => priorityRepository.create(item))
+      this.createIssueType(issueType)
+      this.createPriority(priority)
 
       if (!project) throw new Error("Can't create project");
 
@@ -186,6 +179,22 @@ class ProjectController {
       );
     }
   };
+
+  createPriority = async (priorities) => {
+    priorities.map( async item => await priorityRepository.create(item))
+  }
+
+  createIssueType = (items) => {
+    let subTaskId;
+      items.map( async item => {
+        if(item.type === 'Sub Task') {
+          let subTask = await issueTypeRepository.create(item);
+          subTaskId = subTask._id
+        } else {
+          issueTypeRepository.create({...item, children: [subTaskId]})
+        }
+      })
+  }
 
   getListAllProjectByUserId = async (req, res, next) => {
     let userId = req.userId;
