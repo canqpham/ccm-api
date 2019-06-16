@@ -19,7 +19,8 @@ class ProjectMemberRepository {
         return result
     }
 
-    getListProjectDashboard = async userId => {
+    getListProjectDashboard = async (userId, sort) => {
+        console.log(sort)
         const results = await ProjectMember.aggregate([
           {
             $match: {
@@ -105,7 +106,13 @@ class ProjectMemberRepository {
                 },
               }
             }
-          }
+          },
+          {
+            $sort: {
+              "project.updatedAt": -1,
+              "project.createdAt": 1
+            }
+          },
         ])
         return [results, {}];
       }
@@ -127,8 +134,31 @@ class ProjectMemberRepository {
         return result
     }
 
-    getListUserByProjectId = async (id) => {
-        const result = await ProjectMember.find({project: id}).sort('-updatedAt')
+    getListUserByProjectId = async (id, email) => {
+        const result = await ProjectMember.aggregate([
+          {
+            $match: {
+              project: mongoose.Types.ObjectId(id),
+              
+            }
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "member",
+              foreignField: "_id",
+              as: "member"
+            }
+          },
+          {
+            $addFields: {
+              "member": {
+                $arrayElemAt: ['$member', 0]
+              },
+            }
+          },
+          
+        ])
         return result
     }
 

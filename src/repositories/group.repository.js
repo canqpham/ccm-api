@@ -3,15 +3,14 @@ import Group from '../models/group.model';
 class GroupRepository {
     constructor() {}
     create = async (data) => {
-        const {name, level} = data;
-        const group = await Group.create({name, level});
+        // const {name, level} = data;
+        const group = await Group.create(data);
         return group;  
     }
 
     getGroup = async (data) => {
         const temp = await Group.findOne(data)
-        if(temp) return true;
-        return false;
+        return temp
     }
 
     getListByParams = async (data) => {

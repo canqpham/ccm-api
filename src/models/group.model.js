@@ -7,7 +7,7 @@ const GroupSchema = new Schema(
   {
     project: {type: ObjectId, ref: 'projects'},
     name: {type: String, default: null},
-    level: {type: Number, default: 3} // 0: Administrator 1:Scrum master, 2: Product Owner, 3: Developer
+    level: {type: Number, default: 3} // 1: Administrator 2:Manager, 3: Developer
   },
   {
     collection: 'groups',

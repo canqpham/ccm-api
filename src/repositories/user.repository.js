@@ -1,6 +1,6 @@
 import User from '../models/user.model';
 import NotFoundException from '../errors/not-found.error';
-
+import mongoose from 'mongoose'
 class UserRepository {
   constructor() { }
 
@@ -32,6 +32,24 @@ class UserRepository {
   getListByParams = async data => {
     let users = await User.find(data)
     return users
+  }
+
+  getListEmail = async email => {
+    if(email) {
+      let users = await User.find(
+        {
+          email: { $regex: email }
+        },
+        {
+          email: "$email",
+          displayName: "$displayName",
+          fullName: "$fullName"
+        }
+      ).limit(5)
+      return users
+    } else {
+      return []
+    }
   }
 }
 

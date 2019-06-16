@@ -1,6 +1,7 @@
 import ProjectRepository from "../repositories/project.repository";
 import ProjectMemberRepository from "../repositories/projectMember.repository";
 import GroupRepository from "../repositories/group.repository";
+import GroupMemberRepository from "../repositories/groupMember.repository";
 import WorkflowRepository from "../repositories/workflow.repository";
 import IssueTypeRepository from "../repositories/issueType.repository";
 import UserRepository from "../repositories/user.repository";
@@ -27,6 +28,7 @@ const priorityRepository = new PriorityRepository();
 const sprintRepository = new SprintRepository();
 const versionRepository = new VersionRepository();
 const groupRepository = new GroupRepository();
+const groupMemberRepository = new GroupMemberRepository();
 
 // const ObjectId = mongoose.Types
 class ProjectController {
@@ -156,6 +158,26 @@ class ProjectController {
           iconUrl: '/media/lowest.svg'
         },
       ]
+
+      const groups = [
+        {
+          project: project._id,
+          name: "Administrator",
+          level: 1,
+        },
+        {
+          project: project._id,
+          name: "Manager",
+          level: 2,
+        },
+        {
+          project: project._id,
+          name: "Developer",
+          level: 3,
+        }
+      ]
+      
+      this.createGroup(userId, project._id, groups)
       this.createIssueType(issueType)
       this.createPriority(priority)
 
@@ -182,6 +204,18 @@ class ProjectController {
 
   createPriority = async (priorities) => {
     priorities.map( async item => await priorityRepository.create(item))
+  }
+
+  createGroup = async (userId, project, groups) => {
+    await groups.map( (item, index) => groupRepository.create(item))
+    // const group = await groupRepository.getGroup({level: 1, project: mongoose.Types.ObjectId(project)})
+    // console.log(group)
+    // const groupMember = {
+    //   member: userId,
+    //   group: group._id,
+    //   project
+    // }
+    // await groupMemberRepository.create(groupMember)
   }
 
   createIssueType = (items) => {
@@ -345,8 +379,7 @@ class ProjectController {
         lead: userId
       });
       // console.log(project)
-      if (!project)
-        throw new Error("User does not have permission to remove project");
+      if (!project) throw new Error("User does not have permission to remove project");
 
       const projectMember = await projectMemberRepository.getListUserByProjectId(
         id
@@ -372,7 +405,7 @@ class ProjectController {
       // const projectIssues = await issueRepository.getListByParams({project: id}) //
       // projectIssues.map(item => issueRepository.remove(item._id))
 
-      const projectSprints = await sprintRepository.getLstByParams({
+      const projectSprints = await sprintRepository.getListSprintByParams({
         project: id
       });
       projectSprints.map(item => sprintRepository.remove(item._id));
