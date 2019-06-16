@@ -32,6 +32,11 @@ class WorkflowRepository {
           project: mongoose.Types.ObjectId(id)
         }
       },
+      {
+        $sort: {
+          sequence: 1
+        }
+      }
       // {
       //   $lookup: {
       //     from: "issues",
