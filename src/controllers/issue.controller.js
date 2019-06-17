@@ -95,7 +95,7 @@ class IssueController {
 
       const paramsActivity = {
         issue: issue._id,
-        content: `<b>${user.displayName}</b> created issue <b>${issue.issueKey}</b> `
+        content: `<b>${user.displayName || user.fullName}</b> created issue <b>${issue.issueKey}</b> `
       };
       activityRepository.create(paramsActivity); // create activity
 
@@ -274,7 +274,7 @@ class IssueController {
       if(Object.keys( data ).length >= 1 && Object.keys( data )[0] != 'closed') {
         const paramsActivity = {
           issue: issue._id,
-          content: `<b>${user.displayName}</b> updated <b>${element}</b> `
+          content: `<b>${user.displayName || user.fullName}</b> updated <b>${element}</b> `
         };
         activityRepository.create(paramsActivity); // create activity
       }
@@ -282,13 +282,13 @@ class IssueController {
       if(data.closed === true) {
         const paramsActivity = {
           issue: issue._id,
-          content: `<b>${user.displayName}</b> closed issue `
+          content: `<b>${user.displayName || user.fullName}</b> closed issue `
         };
         activityRepository.create(paramsActivity); // create activity
       } else if (data.closed === false) {
         const paramsActivity = {
           issue: issue._id,
-          content: `<b>${user.displayName}</b> reopen issue `
+          content: `<b>${user.displayName || user.fullName}</b> reopen issue `
         };
         activityRepository.create(paramsActivity); // create activity
       }
@@ -346,7 +346,7 @@ class IssueController {
 
       const paramsActivity = {
         issue: issue._id,
-        content: `<b>${user.displayName}</b> delete issue `
+        content: `<b>${user.displayName || user.fullName}</b> delete issue `
       };
       activityRepository.create(paramsActivity); // create activity
 

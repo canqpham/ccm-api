@@ -129,39 +129,7 @@ class IssueRepository {
           }
         }
       },
-      {
-        $lookup: {
-          from: "comments",
-          pipeline: [
-            { $match: { issue: mongoose.Types.ObjectId(id) } },
-            {
-              $project: {
-                creator: "$creator",
-                content: "$content",
-                image: "$image",
-                attach: "$attach",
-                tagMembers: "$tagMembers",
-                tagIssues: "$tagIssues"
-              }
-            }
-          ],
-          as: "comments"
-        },
-      },
-      {
-        $unwind: {
-          path: "$comments",
-          preserveNullAndEmptyArrays: true
-        }
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: "comments.creator",
-          foreignField: "_id",
-          as: 'comments.creator'
-        },
-      },
+      
       {
         $lookup: {
           from: "activities",
@@ -220,10 +188,7 @@ class IssueRepository {
           },
           "subtasks.workflow": {
             $arrayElemAt: ['$subtasks.workflow', 0]
-          },
-          "comments.creator": {
-            $arrayElemAt: ['$comments.creator', 0]
-          },
+          }
         }
       },
       { 
@@ -254,7 +219,78 @@ class IssueRepository {
           comments: { $push: "$comments" },
           activities: { $first: "$activities" },
         } 
-      }
+      },
+      {
+        $lookup: {
+          from: "comments",
+          pipeline: [
+            { $match: { issue: mongoose.Types.ObjectId(id) } },
+            {
+              $project: {
+                creator: "$creator",
+                content: "$content",
+                image: "$image",
+                attach: "$attach",
+                tagMembers: "$tagMembers",
+                tagIssues: "$tagIssues",
+                createdAt: "$createdAt",
+                updatedAt: "$updatedAt"
+              }
+            }
+          ],
+          as: "comments"
+        },
+      },
+      {
+        $unwind: {
+          path: "$comments",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: "comments.creator",
+          foreignField: "_id",
+          as: 'comments.creator'
+        },
+      },
+      {
+        $addFields: {
+          "comments.creator": {
+            $arrayElemAt: ['$comments.creator', 0]
+          },
+        }
+      },
+      { 
+        $group: { 
+          _id: "$_id",
+          subtasks: { $first: "$subtasks" },
+          assignee: { $first: "$assignee" },
+          version: { $first: "$version" },
+          sprint: { $first: "$sprint" },
+          sprintHistory: { $first: "$sprintHistory" },
+          attachs: { $first: "$attachs" },
+          component: { $first: "$component" },
+          label: { $first: "$label" },
+          closed: { $first: "$closed" },
+          project: { $first: "$project" },
+          description: { $first: "$description" },
+          released: { $first: "$released" },
+          summary: { $first: "$summary" },
+          issueType: { $first: "$issueType" },
+          priority: { $first: "$priority" },
+          storyPoints: { $first: "$storyPoints" },
+          creator: { $first: "$creator" },
+          workflow: { $first: "$workflow" },
+          issueKey: { $first: "$issueKey" },
+          createdAt: { $first: "$createdAt" },
+          updatedAt: { $first: "$updatedAt" },
+          numberOfAssignee: { $first: "$numberOfAssignee" },
+          comments: { $push: "$comments" },
+          activities: { $first: "$activities" },
+        } 
+      },
     ]);
     // let result  = issue.populate('workflow')
     return issue[0];

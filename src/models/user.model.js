@@ -16,7 +16,7 @@ const UserSchema = new Schema(
     },
     active: { type: Boolean, default: true },
     password: String,
-    avatarUrl: { type: String },
+    avatarUrl: { type: String, default: "/media/avatar5.png" },
     isSupperAdmin: { type: Boolean, default: false },
     fullName: { type: String, required: true },
     jobTitle: { type: String },
