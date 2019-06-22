@@ -34,6 +34,11 @@ class UserRepository {
     return users
   }
 
+  update = async (id, data) => {
+    let user = await User.findByIdAndUpdate(id, data)
+    return user
+  }
+
   getListEmail = async email => {
     if(email) {
       let users = await User.find(

@@ -87,6 +87,25 @@ class UserController {
         }))
       }
     }
+
+    update = async (req, res, next) => {
+      let data = req.body
+      let id = req.userId
+      try {
+        let user = await userRepository.update(id, data)
+        if(!user) throw new Error("User not found !")
+        return res.json( new RequestResponse({
+          data: user,
+          statusCode: 200
+        }))
+      } catch (error) {
+        return res.json( new RequestResponse({
+          success: false,
+          statusCode: 400,
+          error
+        }))
+      }
+    }
 }
 
 export default UserController;

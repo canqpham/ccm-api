@@ -8,6 +8,7 @@ import UserController from '../controllers/user.controller';
 const userController = new UserController();
 
 router.get('/', Authenticate(),  userController.getInfo);
+router.put('/', Authenticate(),  userController.update);
 router.get('/email', Authenticate(), userController.getListEmail);
 router.get('/list', Authenticate(),  userController.getListUserByProject);
 

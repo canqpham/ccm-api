@@ -253,8 +253,8 @@ class IssueController {
       }
 
       if (Number(data.storyPoints)) {
-        const isStoryPointExist = await storyPointRepository.getStoryPoint({point: data.storyPoints, project: data.project})
-        !isStoryPointExist && storyPointRepository.create({point: data.storyPoints, project: data.project})
+        const isStoryPointExist = await storyPointRepository.getStoryPoint({point: data.storyPoints, project: issue.project})
+        !isStoryPointExist && storyPointRepository.create({point: data.storyPoints, project: issue.project})
       }
 
       let element = ''
