@@ -10,8 +10,6 @@ const CommentSchema = new Schema(
     content: {type: String},
     creator: {type: ObjectId, ref: 'users', required: true},
     attach: {type: String},
-    tagMembers: [{type: ObjectId, ref: 'users'}],
-    tagIssues: [{type: ObjectId, ref: 'issues'}],
   },
   {
     collection: 'comments',

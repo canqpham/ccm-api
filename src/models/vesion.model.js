@@ -12,6 +12,7 @@ const VersionSchema = new Schema(
     // start: {type: Boolean},
     // end: {type: Boolean},
     releaser: {type: ObjectId, ref: "users"},
+    unreleaser: {type: ObjectId, ref: "users"},
     released: {type: Boolean, default: false},
     status: {type: String, enum: ['RELEASED', 'UNRELEASED'], default: "UNRELEASED"},
     startDate: {type: Date},

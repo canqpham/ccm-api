@@ -43,7 +43,7 @@ class VersionController {
     let userId = req.userId
     let id = req.params.id
     try {
-      const version = await versionRepository.update(id, {released: true, status: "RELEASED"})
+      const version = await versionRepository.update(id, {released: true, status: "RELEASED", releaser: userId})
       if(!version) throw new Error("Can't create project type")
       this.updateIssueReleaseStatus(id, true)
 
@@ -64,7 +64,7 @@ class VersionController {
     let userId = req.userId
     let id = req.params.id
     try {
-      const version = await versionRepository.update(id, {released: false, status: "UNRELEASED"})
+      const version = await versionRepository.update(id, {released: false, status: "UNRELEASED", releaser: userId})
       if(!version) throw new Error("Can't create project type")
       this.updateIssueReleaseStatus(id, false)
       return res.json(new RequestResponse({
