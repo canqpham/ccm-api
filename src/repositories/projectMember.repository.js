@@ -40,6 +40,32 @@ class ProjectMemberRepository {
           },
           {
             $lookup: {
+              from: "projectTypes",
+              localField: "project.projectType",
+              foreignField: "_id",
+              as: "project.projectType"
+            }
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "project.lead",
+              foreignField: "_id",
+              as: "project.lead"
+            }
+          },
+          {
+            $addFields: { 
+              "project.projectType": {
+                $arrayElemAt: [ '$project.projectType', 0 ]
+              },
+              "project.lead": {
+                $arrayElemAt: [ '$project.lead', 0 ]
+              },
+            }
+          },
+          {
+            $lookup: {
               from: "issues",
               localField: "project._id",
               foreignField: "project",

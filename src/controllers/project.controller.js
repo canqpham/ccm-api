@@ -64,7 +64,8 @@ class ProjectController {
         member: userId,
         project: project._id,
         // group: group._id,
-        isSuperAdmin: true
+        isSuperAdmin: true,
+        isSupervise: true,
       };
       let projectMember = await projectMemberRepository.create(
         projectMemberParams
@@ -329,8 +330,12 @@ class ProjectController {
   };
 
   addMemberToProject = async (req, res, next) => {
+    const userId = req.userId
     try {
       const data = req.body;
+      // console.log(userId)
+      const member = await projectMemberRepository.getByParams({member: userId, project: data.project})
+      if(!member.isSupervise) throw new Error("You don't currently have permission to access this action !");
       const temp = await projectMemberRepository.getByParams({
         member: data.member,
         project: data.project
@@ -374,6 +379,7 @@ class ProjectController {
       const userId = req.userId;
       const id = req.params.id;
       // console.log(userId)
+
       const project = await projectRepository.getProjectByParams({
         _id: id,
         lead: userId

@@ -1,7 +1,9 @@
 import ComponentRepository from '../repositories/component.repository'
+import ProjectMemberRepository from "../repositories/projectMember.repository"
 import { RequestResponse } from '../utils/common'
 
-const componentRepository = new ComponentRepository
+const componentRepository = new ComponentRepository()
+const projectMemberRepository = new ProjectMemberRepository()
 
 class ComponentController {
   constructor() {}
@@ -10,6 +12,9 @@ class ComponentController {
     let data = req.body
     let userId= req.userId
     try {
+      const member = await projectMemberRepository.getByParams({ member: userId, project: data.project })
+      // console.log(member)
+      if (!member.isSupervise) throw new Error("You don't currently have permission to access this action !");
       const component = await componentRepository.create(data)
       if(!component) throw new Error("Can't create project type")
       return res.json(new RequestResponse({

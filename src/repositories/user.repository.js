@@ -1,27 +1,26 @@
 import User from '../models/user.model';
 import NotFoundException from '../errors/not-found.error';
+
 import mongoose from 'mongoose'
 class UserRepository {
   constructor() { }
 
   handlerLogin = async (email, password) => {
     // console.log(email)
-    const user = await User.findOne({ email });
-    // console.log(user)
-    if (!user) throw new NotFoundException('USER_NAME_NOT_FOUND');
-    const isPassValid = user.comparePassword(password);
-    if (!isPassValid) return false;
-    return user;
+      const user = await User.findOne({ email });
+      // console.log(user)
+      const isPassValid = user.comparePassword(password);
+      if (!isPassValid) return false;
+      return user;
+    
   }
 
   handlerRegister = async (data) => {
-    const { email } = data
-    let user = await User.findOne({ email });
-    if(user) {
-      return false;
-    }
-    user = await User.create(data);
-    return user;
+      // const { email } = data
+      // let user = await User.findOne({ email });
+      // if(user) throw new Error('Email already exists !');
+      let user = await User.create(data);
+      return user;
   }
 
   getUserInfo = async (id) => {
@@ -32,6 +31,11 @@ class UserRepository {
   getListByParams = async data => {
     let users = await User.find(data)
     return users
+  }
+
+  getUserByParams = async data => {
+    let user = await User.findOne(data)
+    return user
   }
 
   update = async (id, data) => {

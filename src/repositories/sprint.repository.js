@@ -9,6 +9,11 @@ class SprintRepository {
     return sprint;
   };
 
+  getSprintByParams = async data => {
+    const sprint = await Sprint.findOne(data);
+    return sprint;
+  }
+
   update = async (id, data) => {
     await Sprint.findByIdAndUpdate(id, data);
     const sprint = await this.getSprintById(id);

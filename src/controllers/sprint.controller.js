@@ -7,6 +7,7 @@ import moment from "moment";
 
 import { RequestResponse } from "../utils/common";
 import ProjectRepository from "../repositories/project.repository";
+import ProjectMemberRepository from "../repositories/projectMember.repository"
 
 const sprintRepository = new SprintRepository();
 const workflowRepository = new WorkflowRepository();
@@ -14,6 +15,7 @@ const issueRepository = new IssueRepository();
 const projectRepository = new ProjectRepository();
 const activityRepository = new ActivityRepository();
 const userRepository = new UserRepository();
+const projectMemberRepository = new ProjectMemberRepository();
 
 class SprintController {
   constructor() {}
@@ -25,7 +27,10 @@ class SprintController {
     try {
       const project = await projectRepository.getProjectById(projectId)
       if(!project) throw new Error("Cannot find project to create new sprint.")
-
+      const isExist = await sprintRepository.getSprintByParams({name: data.name})
+      if(isExist) throw new Error("Sprint name already exist !")
+      const member = await projectMemberRepository.getByParams({ member: userId, project: data.project })
+      if (!member.isSupervise) throw new Error("You don't currently have permission to access this action !");
       const sprint = await sprintRepository.create(data);
       if (!sprint) throw new Error("Can't create sprint");
       return res.json(
@@ -74,6 +79,9 @@ class SprintController {
     let userId = req.userId;
     let id = req.params.id;
     try {
+      const member = await projectMemberRepository.getByParams({ member: userId, project: data.project })
+      // console.log(member)
+      if (!member.isSupervise) throw new Error("You don't currently have permission to access this action !");
       let sprint = await sprintRepository.update(id, data);
       if (!sprint) throw new Error("Can't update project type");
 
@@ -201,10 +209,12 @@ class SprintController {
     const sprintId = req.body.sprint;
     const userId = req.userId;
     try {
+      const member = await projectMemberRepository.getByParams({member: userId, project})
+      if(!member.isSupervise) throw new Error("You don't currently have permission to access this action !");
       const sprints = await sprintRepository.getListSprintByParams({ project });
-      if (!sprints) throw new Error("Not found sprints of this project");
+      if (!sprints) throw new Error("Not found sprints of this project !");
       const isExist = await sprints.find(item => item.active == true);
-      if (isExist) throw new Error("Have been sprints started");
+      if (isExist) throw new Error("Have been sprints started !");
 
       // const issues = await issueRepository.getListIssueByParams({
       //   project,
@@ -243,7 +253,7 @@ class SprintController {
     // console.log('newSprint: ', newSprint)
     const user = await userRepository.getUserInfo(userId);
     const issues = await issueRepository.getListIssueByParams({sprint: oldSprint})
-    console.log(issues)
+    // console.log(issues)
     issues.map(issue => {
       if(issue.workflow.type != "DONE") {
         let sprintHistory = issue.sprintHistory || []
@@ -264,6 +274,9 @@ class SprintController {
     const sprintId = req.body.sprint;
     const userId = req.userId;
     try {
+      const member = await projectMemberRepository.getByParams({ member: userId, project })
+      // console.log(member)
+      if (!member.isSupervise) throw new Error("You don't currently have permission to access this action !");
       const sprints = await sprintRepository.getListSprintByParams({ project });
       if (!sprints) throw new Error("Not found sprints of this project");
 

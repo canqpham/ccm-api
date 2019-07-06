@@ -2,7 +2,7 @@ import JWT from 'jsonwebtoken';
 import passport from 'passport';
 import { AuthConfig } from '../../configs/auth';
 import UserRepository from '../repositories/user.repository';
-
+import {RequestResponse} from '../utils/common'
 const userRepository = new UserRepository();
 
 class AuthController {
@@ -10,17 +10,19 @@ class AuthController {
     let { email, password } = req.body;
     try {
       //handler login
+      const isExist = await userRepository.getUserByParams({email})
+      if(!isExist) throw new Error('Email or password is incorrect !');
       let user = await userRepository.handlerLogin(email, password);
       if (!user) throw new Error("Password incorrect.");
-
       //Initialize token
       let token = await this._signToken(user);
       return res.json({ token });
     } catch (error) {
-      console.log('error.status: ', error.status)
-      return res.status(error.status || 500).json({
-        message: error.message
-      });
+      return res.json(new RequestResponse({
+        statusCode: 400,
+        success: false,
+        error
+      }))
     }
   }
 
