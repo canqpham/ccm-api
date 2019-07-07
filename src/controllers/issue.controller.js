@@ -218,20 +218,35 @@ class IssueController {
     const userId = req.userId;
     try {
       let issue = {}
+      const issueTemp = await issueRepository.getIssueInfo(id)
+      // console.group(issueTemp)
       if(data.sprint) {
         let sprint = data.sprint
         if(data.sprint == "backlog-column") {
           sprint = ''
           data.sprint = null
         }
-        const issueTemp = await issueRepository.getIssueInfo(id)
         let sprintHistory = issueTemp.sprintHistory || []
         if(sprintHistory[sprintHistory.length - 1] != sprint) {
           sprintHistory.push(sprint)
           issue = await issueRepository.update(id, {...data, sprintHistory });
         }
       } else {
-        issue = await issueRepository.update(id, data);
+        if (data.moveToWorkflow) {
+          if(issueTemp.workflow.linkAll) {
+            issue = await issueRepository.update(id, {workflow: data.moveToWorkflow});
+          } else {
+            const isMove = issueTemp.workflow.to.find(item => item == data.moveToWorkflow)
+            // console.log(isMove)
+            if(!isMove) {
+              throw new Error('Need to follow the config workflow stream!')
+            } else {
+              issue = await issueRepository.update(id, {workflow: data.moveToWorkflow});
+            }
+          }
+        } else {
+          issue = await issueRepository.update(id, data);
+        }
       }
 
       const user = await userRepository.getUserInfo(userId);

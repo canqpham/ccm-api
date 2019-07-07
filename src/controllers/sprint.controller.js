@@ -27,13 +27,13 @@ class SprintController {
     try {
       const project = await projectRepository.getProjectById(projectId)
       if(!project) throw new Error("Cannot find project to create new sprint.")
-      const isExist = await sprintRepository.getSprintByParams({name: data.name})
+      const isExist = await sprintRepository.getSprintByParams({name: data.name, project: projectId })
       if(isExist) throw new Error("Sprint name already exist !")
       const member = await projectMemberRepository.getByParams({ member: userId, project: data.project })
       if (!member.isSupervise) throw new Error("You don't currently have permission to access this action !");
       const sprint = await sprintRepository.create(data);
       if (!sprint) throw new Error("Can't create sprint");
-      return res.json(
+      return res.json( 
         new RequestResponse({
           statusCode: 200,
           data: sprint
