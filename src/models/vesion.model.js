@@ -6,11 +6,8 @@ const { ObjectId } = Schema.Types;
 
 const VersionSchema = new Schema(
   {
-    // sprint: {type: ObjectId, ref: 'sprints'},
     project: {type: ObjectId, ref: 'projects'},
-    name: {type: String, required: true}, // to do, in progress, test, deploy, done or 1 2 3 4 5
-    // start: {type: Boolean},
-    // end: {type: Boolean},
+    name: {type: String, required: true},
     releaser: {type: ObjectId, ref: "users"},
     unreleaser: {type: ObjectId, ref: "users"},
     released: {type: Boolean, default: false},

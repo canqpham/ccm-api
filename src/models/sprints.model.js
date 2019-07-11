@@ -6,9 +6,9 @@ const { ObjectId } = Schema.Types;
 
 const SprintSchema = new Schema(
   {
-    name: {type: String, required: true}, // story, bug, epic
+    name: {type: String, required: true},
     project: {type: ObjectId, ref: 'projects'},
-    sequence: {type: Number}, // 1 2 3 4 5 6
+    sequence: {type: Number},
     goal: {type: String},
     daysRemaining: {type: Number},
     endDate: {type: Date},

@@ -11,6 +11,7 @@ const ProjectSchema = new Schema(
     projectType: {type: ObjectId, ref: 'projectTypes'},
     webUrl: {type: String},
     description: {type: String, default: null},
+    sprintRange: {type: Number, default: 14}
   },
   {
     collection: 'projects',

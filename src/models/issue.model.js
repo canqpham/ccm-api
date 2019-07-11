@@ -14,7 +14,6 @@ const IssueSchema = new Schema(
     summary: {type: String, required: true},
     description: {type: String},
     priority: {type: ObjectId, ref: 'priorities'},
-    // issueStatus: {type: ObjectId, ref: 'issueStatus'}, // to do, in progress, test, done
     sprint: {type: ObjectId, ref: 'sprints'},
     sprintHistory: [{type: String}],
     workflow: {type: ObjectId, ref: 'workflow'}, // to do, in progress, test, done
@@ -28,10 +27,6 @@ const IssueSchema = new Schema(
     storyPoints: {type: Number},
     version: {type: ObjectId, ref: 'versions'},
     component: [{type: ObjectId, ref: 'components'}],
-    sequenceInBacklog: {type: Number}, // 1, 2, 3, 4, ...
-    sequenceInIssues: {type: Number}, // 1, 2, 3, 4, ...
-    sequenceInSprint: {type: Number}, // 1, 2, 3, 4, ...
-    sequenceInWorkflow: {type: Number}, // 1, 2, 3, 4, ...
     closed: {type: Boolean, default: false},
     released: {type: Boolean, default: false}
   },

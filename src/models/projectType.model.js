@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 
 const ProjectTypeSchema = new Schema(
   {
-    name: {type: String, required: true}, // story, bug, epic
+    name: {type: String, required: true},
     description: {type: String},
   },
   {

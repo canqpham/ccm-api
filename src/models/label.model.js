@@ -6,7 +6,7 @@ const { ObjectId } = Schema.Types;
 
 const LabelSchema = new Schema(
   {
-    name: {type: String, required: true}, // story, bug, epic, subTask
+    name: {type: String, required: true},
     color: {type: String},
     project: {type: ObjectId, ref: 'projects'}
   },
