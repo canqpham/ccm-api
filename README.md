@@ -3,6 +3,7 @@ HỆ THỐNG QUẢN LÝ PHÁT TRIỂN PHẦN MỀM THEO PHƯƠNG PHÁP AGILE - S
 
 =======================
 ## Tác giả
+```sh
 Tác giả 1: 
     Họ tên: Phạm Hồng Cang
     Sinh năm: 20-12-1997
@@ -13,8 +14,9 @@ Tác giả 2:
     Sinh năm: 07-06-1997
     Mã số sinh viên: 15110020
     Khoa đào tạo chất lượng cao - ngành Công nghệ thông tin - chuyên ngành Công nghệ phần mềm
-
+```
 ## Cài đặt
+```sh
 - Đầu tiên mở đĩa cd copy tất cả thư mục vào vị trí muốn chứa project
 - Quá trình cài đặt chia làm 3 giai đoạn:
     Giai đoạn 1: Chuẩn bị môi trường
@@ -30,3 +32,4 @@ Tác giả 2:
         Bước 2: Nhập lệnh: npm install
         Bước 3: Nhập lệnh: npm start
 Chờ khi trình duyệt web tự động truy cập vào đường dẫn localhost:3000 là thành công
+```
